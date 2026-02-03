@@ -1,1 +1,1 @@
-web: gunicorn paranga_sms.wsgi:application --log-file -
+web: gunicorn paranga_sms.wsgi --log-file -
