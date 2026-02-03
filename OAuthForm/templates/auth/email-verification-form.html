@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email | Mutech</title>
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Styles for the Page */
+        .header {
+            width: 100%;
+            padding: 15px 0;
+            background-color: #fff;
+            text-align: left;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .back-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+        }
+
+        .back-link:hover {
+            text-decoration: none;
+        }
+
+        .content-container {
+            width: 100%;
+            padding-top: 80px;
+        }
+
+        .form-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Adjusted input field size */
+        .form-control {
+            border: 2px solid #808080;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #666666;
+            box-shadow: 0 0 5px rgba(128, 128, 128, 0.5);
+        }
+
+        .register-btn {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: rgb(235, 239, 243);
+            color: gray;
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 20px;
+            float: left;
+        }
+
+        .register-btn:disabled {
+            background-color: rgb(235, 239, 243);
+        }
+
+        /* Centered Resend OTP link */
+        .reset-link {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .reset-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .reset-link a:hover {
+            text-decoration: none;
+        }
+
+        /* Alert Container Styling */
+        .alert-container {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 1.5;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            min-height: 50px;
+            width: 100%;
+        }
+
+        .alert-container.alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-container.alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            .back-link {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+{% include "includes/header.html" %}
+    <!-- Content -->
+    <div class="content-container">
+        <div class="container">
+            <!-- Email Verification Form -->
+            <div class="form-container">
+                <h2>Verify Your Email MuGate | OAuth🚀</h2>
+                <div id="alertContainer" class="alert-container"></div> <!-- This is your alert container -->
+                <form id="verifyForm" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="verifyUsername">Username</label>
+                        <input type="text" name="username" id="verifyUsername" class="form-control" placeholder="Enter Username" required />
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="otpCode">OTP</label>
+                        <input type="text" name="otp_code" id="otpCode" class="form-control" placeholder="Enter OTP" maxlength="6" required />
+                    </div>
+
+                    <!-- Verify Email Button -->
+                    <button type="submit" class="register-btn" id="submitBtn">Verify Email</button>
+                </form>
+
+                <br><br>
+
+                <!-- Resend OTP Link, centered below the button -->
+                <div class="reset-link">
+                    <p>Didn’t receive an OTP? <a href="#" id="resendOtpLink">Resend OTP</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Define the route variable at a global scope so it is accessible in both handlers
+    const route = "https://web-mugate-api.onrender.com";  // The base URL for your API
+
+    document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();  // Prevent default form submission
+
+        const route1 = "https://web-mugate-api.onrender.com"; // Login route
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const username = document.getElementById('verifyUsername').value.trim();
+        const otpCode = document.getElementById('otpCode').value.trim();
+
+        // Validate inputs
+        if (!username || !otpCode) {
+            showAlert('Please fill in all fields.', 'danger');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Verifying...';
+
+        try {
+            // Send the OTP verification request
+            const response = await fetch(`${route}/api/v1/verify-otp/${username}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,  // Include CSRF token in request header
+                },
+                body: JSON.stringify({ otp_code: otpCode }),
+            });
+
+            const data = await response.json();
+            console.log("Response Data:", data);
+
+            if (response.ok) {
+                showAlert('Your email has been successfully verified.', 'success');
+                // Redirect to login page after the alert
+                setTimeout(() => {
+                    window.location.href = route1 + '';  // Correct URL for login page
+                }, 3000); // Delay of 3 seconds before redirect
+            } else {
+                showAlert(data.error || 'Verification failed. Please try again.', 'danger');
+            }
+        } catch (error) {
+            console.error("Error during OTP verification:", error);
+            showAlert('An error occurred. Please try again.', 'danger');
+        } finally {
+            // Reset the button state
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Verify Email';
+        }
+    });
+
+    document.getElementById('resendOtpLink').addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('verifyUsername').value.trim();
+
+        if (!username) {
+            showAlert('Please enter your username first.', 'danger');
+            return;
+        }
+        
+
+        const resendLink = document.getElementById('resendOtpLink');
+        resendLink.textContent = 'Resending OTP...';
+
+        try {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const response = await fetch(`${route}/api/v1/resend-otp/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,  // Include CSRF token
+                },
+                body: JSON.stringify({ username: username })  // Send username in body
+            });
+
+            const data = await response.json();  // Use .json() to parse the response directly
+            console.log("Response Data:", data);
+
+            if (response.ok) {
+                showAlert('The OTP has been resent successfully. Please check your email.', 'success');
+            } else {
+                showAlert(data.error || 'An error occurred while resending OTP.', 'danger');
+            }
+        } catch (error) {
+            showAlert(`An error occurred: ${error.message}`, 'danger');
+        } finally {
+            resendLink.textContent = 'Resend OTP';
+        }
+    });
+
+    // Function to show alerts
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        alertContainer.classList.add(`alert-${type}`);
+        alertContainer.innerHTML = message;
+        alertContainer.style.display = 'block';
+
+        // Automatically hide the alert after 5 seconds
+        setTimeout(() => {
+            alertContainer.style.display = 'none';
+            alertContainer.classList.remove(`alert-${type}`);
+        }, 5000);
+    }
+</script>
+
+
+</body>
+</html>

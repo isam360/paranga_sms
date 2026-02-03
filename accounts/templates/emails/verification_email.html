@@ -1,0 +1,33 @@
+{% extends "app.html" %}
+{% block title %}Email Verification - OAuth🚀{% endblock %}
+{% load static %}
+{% block content %}
+
+<div class="email-container">
+ 
+     <!-- Header -->
+     <div class="header">
+        <h1 class="brand">MuGate | OAuth🚀</h1>
+    </div>
+
+    <!-- Email Body -->
+    <div class="email-body">
+        <h2>It's time to confirm your email address.</h2>
+        <p>Hello {{ username }},</p>
+        <p>Thank you for registering with MuGate OAuth🚀. To confirm your email and complete your registration, use the One-Time Password (OTP) below:</p>
+        <p class="otp-code">Your OTP: <strong>{{ otp_code }}</strong></p>
+        <p class="expiry-note">This code will expire in 5 minutes. Please use it promptly to verify your email and access the system.</p>
+        <p>Click the button below to verify your email:</p>
+        <div class="button-container">
+            <a href="{{ verification_url }}" class="cta-button">Verify My Email</a>
+        </div>
+        <p class="note">If you didn't register for MuGate OAuth🚀, please ignore this email.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>For support, contact us at: <a href="mailto:support@mutech.com">support@mutech.com</a></p>
+        <p>&copy; 2024 MuGateech. All Rights Reserved.</p>
+    </div>
+</div>
+{% endblock %}

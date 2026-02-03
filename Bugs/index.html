@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paranga Secondary School - Excellence in Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #1a365d; /* Navy Blue */
+            --secondary-color: #d4af37; /* Gold */
+            --accent-color: #2d5aa0;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-radius: 5px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #f5f7fa;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--secondary-color);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-center h2:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 28px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #b8941f;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-contact i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+
+        .header-contact span {
+            margin-right: 20px;
+        }
+
+        .social-icons a {
+            color: white;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary-color);
+        }
+
+        .main-header {
+            padding: 20px 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 80px;
+            width: auto;
+            margin-right: 15px;
+        }
+
+        .school-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.2;
+        }
+
+        .school-motto {
+            color: var(--secondary-color);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--dark-color);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.9)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .hero .btn-secondary {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .hero .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .quick-link-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .quick-link-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .quick-link-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Highlights */
+        .highlights {
+            padding: 60px 0;
+            background-color: #f0f4f8;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* About Preview */
+        .about-preview {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .about-text {
+            padding-right: 20px;
+        }
+
+        .about-image {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* NEW: Academics Section */
+        .academics-section {
+            padding: 80px 0;
+            background-color: #f0f4f8;
+        }
+
+        .academics-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eaeaea;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .department-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .department-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .department-card h4 i {
+            color: var(--secondary-color);
+        }
+
+        .subject-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .subject-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .subject-list li:last-child {
+            border-bottom: none;
+        }
+
+        .subject-name {
+            font-weight: 500;
+        }
+
+        .subject-code {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .curriculum-info {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-item i {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        /* NEW: Admissions Section */
+        .admissions-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .admission-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .step-card {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--box-shadow);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--secondary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .step-card h4 {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admission-form-container {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .fee-structure {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .fee-table th, .fee-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .fee-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .fee-table tr:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        /* News & Events */
+        .news-events {
+            padding: 60px 0;
+            background-color: #f0f4f8;
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .news-items {
+            display: grid;
+            gap: 25px;
+        }
+
+        .news-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+        }
+
+        .news-image {
+            height: 100%;
+            min-height: 200px;
+            background-color: var(--primary-color);
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .events-sidebar {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .event-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-date {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            min-width: 70px;
+            margin-right: 15px;
+        }
+
+        .event-day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+
+        .event-month {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        /* Results & Downloads Section */
+        .results-downloads {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .download-category {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .download-category h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .download-category h3 i {
+            color: var(--secondary-color);
+        }
+
+        .download-list {
+            list-style: none;
+        }
+
+        .download-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .download-item:last-child {
+            border-bottom: none;
+        }
+
+        .download-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .download-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .download-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .download-protected {
+            background-color: #6c757d;
+        }
+
+        .results-login-notice {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* Statistics Charts Section */
+        .statistics-charts {
+            padding: 80px 0;
+            background-color: #f0f4f8;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .chart-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-card h3 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-summary {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .summary-item h4 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .summary-item p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        /* Map & Location Section */
+        .map-location {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .location-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+            align-items: center;
+        }
+
+        .map-wrapper {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            height: 400px;
+        }
+
+        #schoolMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .location-info {
+            padding: 20px;
+        }
+
+        .location-info h3 {
+            margin-bottom: 20px;
+        }
+
+        .location-details {
+            margin-bottom: 30px;
+        }
+
+        .location-detail {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .location-detail i {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .transport-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .contact-form-container {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        .footer-column h3:after {
+            background-color: var(--secondary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .newsletter-form button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .about-content, .location-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .about-text {
+                padding-right: 0;
+            }
+            
+            .news-container, .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .department-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admission-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 160px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 160px);
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: var(--transition);
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .header-top .container {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .header-contact span {
+                margin-right: 10px;
+            }
+            
+            .hero {
+                padding: 70px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .news-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .news-image {
+                min-height: 150px;
+            }
+            
+            .map-wrapper {
+                height: 300px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .academics-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                text-align: left;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quick-link-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card {
+                padding: 20px;
+            }
+            
+            .results-login-notice {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-phone"></i> +254 723 456 789</span>
+                <span><i class="fas fa-envelope"></i> info@parangasecondary.sc.ke</span>
+                <span><i class="fas fa-map-marker-alt"></i> Paranga, Kenya</span>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="main-header">
+            <div class="container">
+                <nav>
+                    <div class="logo-container">
+                        <div class="logo-placeholder">
+                            <!-- School logo would go here -->
+                            <div style="background-color: var(--primary-color); color: white; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-size: 1.2rem;">PSS</div>
+                        </div>
+                        <div class="school-info">
+                            <div class="school-name">Paranga Secondary School</div>
+                            <div class="school-motto">Education Is Our Inheritance</div>
+                        </div>
+                    </div>
+                    
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#academics">Academics</a></li>
+                        <li><a href="#admissions">Admissions</a></li>
+                        <li><a href="#results">Results</a></li>
+                        <!-- <li><a href="#statistics">Statistics</a></li> -->
+                        <li><a href="#news">News</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#" class="btn btn-secondary btn-small">Portal Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Welcome to Paranga Secondary School</h1>
+            <p>Since 1965, we have been dedicated to nurturing young minds, fostering academic excellence, and building character for a better tomorrow. Join our community of learners, leaders, and innovators.</p>
+            <div class="hero-btns">
+                <a href="#admissions" class="btn">Apply Now</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+        <div class="container">
+            <h2 class="text-center">Quick Access</h2>
+            <div class="quick-link-cards">
+                <div class="quick-link-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Academics</h3>
+                    <p>Explore our curriculum, departments, and academic achievements.</p>
+                    <a href="#academics">Learn More →</a>
+                </div>
+                <div class="quick-link-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Results & Reports</h3>
+                    <p>Access examination results, reports and academic performance data.</p>
+                    <a href="#results">View Results →</a>
+                </div>
+                <!-- <div class="quick-link-card">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>School Statistics</h3>
+                    <p>View detailed statistics about students, teachers, and subjects.</p>
+                    <a href="#statistics">View Stats →</a>
+                </div> -->
+                <div class="quick-link-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Downloads</h3>
+                    <p>Access admission forms, fee structures, and prospectus.</p>
+                    <a href="#results">Download →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights/Stats -->
+    <section class="highlights">
+        <div class="container">
+            <h2 class="text-center">Our Achievements</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Graduation Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">56</span>
+                    <span class="stat-label">Years of Excellence</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24+</span>
+                    <span class="stat-label">Clubs & Societies</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">85%</span>
+                    <span class="stat-label">University Placement</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Preview -->
+    <section class="about-preview" id="about">
+        <div class="container">
+            <h2>About Paranga Secondary School</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Established in 1965, Paranga Secondary School has a long-standing tradition of academic excellence and holistic education. We are committed to developing well-rounded individuals who are prepared for the challenges of higher education and the modern world.</p>
+                    <p>Our mission is to provide quality education that empowers students to achieve their full potential academically, socially, and morally. We foster an environment that encourages critical thinking, creativity, and responsible citizenship.</p>
+                    <p>With state-of-the-art facilities, dedicated staff, and a supportive community, we create an atmosphere where every student can thrive and succeed.</p>
+                    <a href="#about" class="btn" style="margin-top: 20px;">Read More About Us</a>
+                </div>
+                <div class="about-image">
+                    <img src="static/school_logo.jpg" alt="Paranga Secondary School Campus">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academics Section -->
+    <section class="academics-section" id="academics">
+        <div class="container">
+            <h2 class="text-center">Academics & Curriculum</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">We offer a comprehensive curriculum designed to meet the needs of all students and prepare them for higher education and career success.</p>
+            
+            <div class="academics-tabs">
+                <button class="tab-btn active" data-tab="curriculum">Curriculum</button>
+                <button class="tab-btn" data-tab="departments">Departments</button>
+                <button class="tab-btn" data-tab="facilities">Facilities</button>
+                <button class="tab-btn" data-tab="calendar">Academic Calendar</button>
+            </div>
+            
+            <div class="tab-content active" id="curriculum">
+                <div class="curriculum-info">
+                    <h3>8-4-4 Curriculum System</h3>
+                    <p>We follow the Kenyan 8-4-4 education system with emphasis on both academic excellence and practical skills development. Our curriculum is designed to cater to diverse student abilities and interests.</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-book"></i>
+                            <div>
+                                <h4>Core Subjects</h4>
+                                <p>English, Kiswahili, Mathematics, Biology, Chemistry, Physics, History, Geography, CRE</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-cogs"></i>
+                            <div>
+                                <h4>Technical Subjects</h4>
+                                <p>Computer Studies, Business Studies, Agriculture, Home Science, Art & Design</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Co-curricular</h4>
+                                <p>Sports, Clubs, Societies, Leadership Training, Community Service</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-chart-line"></i>
+                            <div>
+                                <h4>Performance</h4>
+                                <p>Consistently above national average in KCSE examinations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="departments">
+                <div class="department-grid">
+                    <div class="department-card">
+                        <h4><i class="fas fa-flask"></i> Sciences Department</h4>
+                        <p>Comprehensive science education with modern laboratories and qualified staff.</p>
+                        <ul class="subject-list">
+                            <li><span class="subject-name">Biology</span> <span class="subject-code">231</span></li>
+                            <li><span class="subject-name">Chemistry</span> <span class="subject-code">233</span></li>
+                            <li><span class="subject-name">Physics</span> <span class="subject-code">232</span></li>
+                            <li><span class="subject-name">Agriculture</span> <span class="subject-code">443</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="department-card">
+                        <h4><i class="fas fa-language"></i> Languages Department</h4>
+                        <p>Developing communication skills in English, Kiswahili and French.</p>
+                        <ul class="subject-list">
+                            <li><span class="subject-name">English</span> <span class="subject-code">101</span></li>
+                            <li><span class="subject-name">Kiswahili</span> <span class="subject-code">102</span></li>
+                            <li><span class="subject-name">French</span> <span class="subject-code">501</span></li>
+                            <li><span class="subject-name">German</span> <span class="subject-code">502</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="department-card">
+                        <h4><i class="fas fa-calculator"></i> Mathematics Department</h4>
+                        <p>Developing logical thinking and problem-solving skills.</p>
+                        <ul class="subject-list">
+                            <li><span class="subject-name">Mathematics</span> <span class="subject-code">121</span></li>
+                            <li><span class="subject-name">Business Studies</span> <span class="subject-code">565</span></li>
+                            <li><span class="subject-name">Computer Studies</span> <span class="subject-code">451</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="department-card">
+                        <h4><i class="fas fa-landmark"></i> Humanities Department</h4>
+                        <p>Understanding society, culture, and human development.</p>
+                        <ul class="subject-list">
+                            <li><span class="subject-name">History</span> <span class="subject-code">311</span></li>
+                            <li><span class="subject-name">Geography</span> <span class="subject-code">312</span></li>
+                            <li><span class="subject-name">CRE</span> <span class="subject-code">313</span></li>
+                            <li><span class="subject-name">IRE</span> <span class="subject-code">314</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="facilities">
+                <div class="curriculum-info">
+                    <h3>Modern Learning Facilities</h3>
+                    <p>Our school is equipped with state-of-the-art facilities to support effective teaching and learning.</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-microscope"></i>
+                            <div>
+                                <h4>Science Laboratories</h4>
+                                <p>Fully equipped labs for Biology, Chemistry, and Physics with modern equipment</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-desktop"></i>
+                            <div>
+                                <h4>Computer Lab</h4>
+                                <p>40 computers with internet access and latest software for ICT training</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-book-reader"></i>
+                            <div>
+                                <h4>Library</h4>
+                                <p>Over 10,000 books, digital resources, and quiet study areas</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-futbol"></i>
+                            <div>
+                                <h4>Sports Facilities</h4>
+                                <p>Football field, basketball court, volleyball, athletics track, and gym</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="calendar">
+                <div class="curriculum-info">
+                    <h3>Academic Calendar 2023/2024</h3>
+                    <p>Important dates and events for the current academic year.</p>
+                    
+                    <div class="fee-table">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Term</th>
+                                    <th>Opening Date</th>
+                                    <th>Closing Date</th>
+                                    <th>Mid-Term</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Term 1</td>
+                                    <td>9th January 2023</td>
+                                    <td>7th April 2023</td>
+                                    <td>23rd - 26th February</td>
+                                </tr>
+                                <tr>
+                                    <td>Term 2</td>
+                                    <td>8th May 2023</td>
+                                    <td>11th August 2023</td>
+                                    <td>29th June - 2nd July</td>
+                                </tr>
+                                <tr>
+                                    <td>Term 3</td>
+                                    <td>4th September 2023</td>
+                                    <td>24th November 2023</td>
+                                    <td>19th - 22nd October</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admissions Section -->
+    <!-- <section class="admissions-section" id="admissions">
+        <div class="container">
+            <h2 class="text-center">Admissions & Enrollment</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">Join our community of learners. The admission process is simple, transparent, and designed to identify students who will thrive in our academic environment.</p>
+            
+            <div class="admission-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-file-alt fa-3x" style="color: var(--secondary-color);"></i>
+                    <h4>Submit Application</h4>
+                    <p>Complete the online application form or download and submit a physical copy</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-clipboard-check fa-3x" style="color: var(--secondary-color);"></i>
+                    <h4>Entrance Exam</h4>
+                    <p>All applicants sit for our entrance examination held twice a year</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-user-check fa-3x" style="color: var(--secondary-color);"></i>
+                    <h4>Interview</h4>
+                    <p>Shortlisted candidates attend an interview with the admissions panel</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <i class="fas fa-graduation-cap fa-3x" style="color: var(--secondary-color);"></i>
+                    <h4>Admission & Enrollment</h4>
+                    <p>Successful candidates receive admission letters and begin enrollment process</p>
+                </div>
+            </div>
+            
+            <div class="admission-form-container">
+                <h3 class="text-center">Online Admission Inquiry</h3>
+                <p class="text-center" style="margin-bottom: 30px;">Fill out the form below to begin the admission process or request more information</p>
+                
+                <form id="admissionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name of Student *</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth *</label>
+                            <input type="date" id="dob" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentSchool">Current School</label>
+                            <input type="text" id="currentSchool">
+                        </div>
+                        <div class="form-group">
+                            <label for="grade">Grade Applying For *</label>
+                            <select id="grade" required>
+                                <option value="">Select Grade</option>
+                                <option value="form1">Form 1</option>
+                                <option value="form2">Form 2</option>
+                                <option value="form3">Form 3</option>
+                                <option value="form4">Form 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parentName">Parent/Guardian Name *</label>
+                            <input type="text" id="parentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parentPhone">Parent Phone Number *</label>
+                            <input type="tel" id="parentPhone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parentEmail">Parent Email *</label>
+                            <input type="email" id="parentEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Home Address</label>
+                            <input type="text" id="address">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Additional Information</label>
+                        <textarea id="message" rows="4" placeholder="Any special considerations or questions..."></textarea>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="btn">Submit Application</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        <a href="#results" class="btn" style="background-color: #6c757d;">Download Prospectus</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="fee-structure">
+                <h3>Fee Structure 2023/2024</h3>
+                <p>Our fee structure is transparent and includes all necessary costs for a complete educational experience.</p>
+                
+                <table class="fee-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Form 1 & 2</th>
+                            <th>Form 3 & 4</th>
+                            <th>Boarding Students</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition Fee</td>
+                            <td>KSh 15,000</td>
+                            <td>KSh 18,000</td>
+                            <td>KSh 35,000</td>
+                        </tr>
+                        <tr>
+                            <td>Activity Fee</td>
+                            <td>KSh 3,000</td>
+                            <td>KSh 3,500</td>
+                            <td>Included</td>
+                        </tr>
+                        <tr>
+                            <td>Library Fee</td>
+                            <td>KSh 1,500</td>
+                            <td>KSh 1,500</td>
+                            <td>Included</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Fee</td>
+                            <td>KSh 2,000</td>
+                            <td>KSh 2,000</td>
+                            <td>KSh 3,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total per Term</strong></td>
+                            <td><strong>KSh 21,500</strong></td>
+                            <td><strong>KSh 25,000</strong></td>
+                            <td><strong>KSh 38,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p style="margin-top: 20px; font-style: italic; color: var(--text-light);">
+                    <i class="fas fa-info-circle"></i> Note: Fees can be paid in installments. Scholarship opportunities are available for exceptional students.
+                </p>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- News & Events -->
+    <section class="news-events" id="news">
+        <div class="container">
+            <h2 class="text-center">News & Events</h2>
+            <div class="news-container">
+                <div class="news-items">
+                    <div class="news-item">
+                        <div class="news-image" style="background: url('https://images.unsplash.com/photo-1524178234883-043d5c3f3cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                        <div class="news-content">
+                            <span class="news-date">June 15, 2023</span>
+                            <h3>KCSE 2022 Results Celebration</h3>
+                            <p>Our school celebrated outstanding performance in the 2022 KCSE examinations, with 45% of students achieving university entry grades.</p>
+                            <a href="#">Read More →</a>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-image" style="background: url('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                        <div class="news-content">
+                            <span class="news-date">June 10, 2023</span>
+                            <h3>Annual Sports Day Success</h3>
+                            <p>The school held its annual sports day with participation from all classes. The event showcased talent in athletics and team sports.</p>
+                            <a href="#">Read More →</a>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-image" style="background: url('https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                        <div class="news-content">
+                            <span class="news-date">June 5, 2023</span>
+                            <h3>New Science Lab Commissioned</h3>
+                            <p>We have opened a new fully-equipped science laboratory to enhance practical learning for our students in chemistry, physics, and biology.</p>
+                            <a href="#">Read More →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="events-sidebar">
+                    <h3>Upcoming Events</h3>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="event-day">25</span>
+                            <span class="event-month">Jun</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Parents-Teacher Meeting</h4>
+                            <p>School Hall, 10:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="event-day">30</span>
+                            <span class="event-month">Jun</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Mid-Term Break Begins</h4>
+                            <p>School closes at 3:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="event-day">15</span>
+                            <span class="event-month">Jul</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Inter-School Debate Competition</h4>
+                            <p>County Level, 9:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="event-day">20</span>
+                            <span class="event-month">Jul</span>
+                        </div>
+                        <div class="event-details">
+                            <h4>Career Guidance Day</h4>
+                            <p>For Form 3 & 4 Students</p>
+                        </div>
+                    </div>
+                    <a href="#" class="btn" style="width: 100%; margin-top: 20px; text-align: center;">View Full Calendar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results & Downloads Section -->
+    <section class="results-downloads" id="results">
+        <div class="container">
+            <h2 class="text-center">Examination Results & Downloads</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">Access official examination results, academic reports, and important school documents for students, parents, and teachers.</p>
+            
+            <div class="download-options">
+                <div class="download-category">
+                    <h3><i class="fas fa-file-contract"></i> Examination Results</h3>
+                    <ul class="download-list">
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>KCSE 2022 Results Summary</h4>
+                                <div class="download-meta">PDF Document • Updated: June 2023 • Public Access</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>End of Term 2 Exam Results 2023</h4>
+                                <div class="download-meta">Excel Spreadsheet • For Teachers Only</div>
+                            </div>
+                            <a href="#" class="download-btn download-protected"><i class="fas fa-lock"></i> Login Required</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Mock Examination Results - Form 4</h4>
+                                <div class="download-meta">PDF Document • March 2023 • Parent Access</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Academic Performance Trends (2018-2022)</h4>
+                                <div class="download-meta">PDF Report • Statistical Analysis • Public</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="download-category">
+                    <h3><i class="fas fa-clipboard-list"></i> Academic Reports & Forms</h3>
+                    <ul class="download-list">
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Student Report Template</h4>
+                                <div class="download-meta">Word Document • For Teachers</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Subject Selection Form 2024</h4>
+                                <div class="download-meta">PDF Form • For Form 2 Students</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Lesson Plan Template</h4>
+                                <div class="download-meta">Word Document • Teaching Staff Only</div>
+                            </div>
+                            <a href="#" class="download-btn download-protected"><i class="fas fa-lock"></i> Login Required</a>
+                        </li>
+                        <li class="download-item">
+                            <div class="download-info">
+                                <h4>Academic Calendar 2023/2024</h4>
+                                <div class="download-meta">PDF Document • Public Access</div>
+                            </div>
+                            <a href="#" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="results-login-notice">
+                <div>
+                    <h4><i class="fas fa-info-circle"></i> Access Restricted Documents</h4>
+                    <p>Some documents are restricted to authorized personnel only. Teachers and staff should log in to access protected resources.</p>
+                </div>
+                <a href="#" class="btn btn-secondary">Teacher Portal Login</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Charts Section -->
+    <!-- <section class="statistics-charts" id="statistics">
+        <div class="container">
+            <h2 class="text-center">School Statistics & Demographics</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">Comprehensive data visualization of our school's population, staff, and academic offerings.</p>
+            
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Student Population by Class</h3>
+                    <div class="chart-container">
+                        <canvas id="studentsChart"></canvas>
+                    </div>
+                    <div class="chart-summary">
+                        <div class="summary-item">
+                            <h4>1,240</h4>
+                            <p>Total Students</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>310</h4>
+                            <p>Average per Class</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Teaching Staff by Department</h3>
+                    <div class="chart-container">
+                        <canvas id="teachersChart"></canvas>
+                    </div>
+                    <div class="chart-summary">
+                        <div class="summary-item">
+                            <h4>68</h4>
+                            <p>Total Teachers</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>18:1</h4>
+                            <p>Student-Teacher Ratio</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Subjects Offered</h3>
+                    <div class="chart-container">
+                        <canvas id="subjectsChart"></canvas>
+                    </div>
+                    <div class="chart-summary">
+                        <div class="summary-item">
+                            <h4>32</h4>
+                            <p>Total Subjects</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>8</h4>
+                            <p>Core Subjects</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Student Gender Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                    <div class="chart-summary">
+                        <div class="summary-item">
+                            <h4>55%</h4>
+                            <p>Female Students</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>45%</h4>
+                            <p>Male Students</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 50px; background-color: white; padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                <h3 class="text-center">Quick Statistics Summary</h3>
+                <div class="stats" style="margin-top: 20px;">
+                    <div class="stat-item">
+                        <span class="stat-number">1,240</span>
+                        <span class="stat-label">Total Students</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">68</span>
+                        <span class="stat-label">Teaching Staff</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">32</span>
+                        <span class="stat-label">Subjects Offered</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Departments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Map & Location Section -->
+    <section class="map-location" id="contact">
+        <div class="container">
+            <h2 class="text-center">Our Location & Contact Information</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">Find us easily with the interactive map below. We welcome visitors during school hours.</p>
+            
+            <div class="location-container">
+                <div class="map-wrapper">
+                    <div id="schoolMap"></div>
+                </div>
+                
+                <div class="location-info">
+                    <h3>Visit Paranga Secondary School</h3>
+                    <div class="location-details">
+                        <div class="location-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Address</h4>
+                                <p>Paranga Secondary School<br>P.O Box 123-40200<br>Paranga, Kenya</p>
+                            </div>
+                        </div>
+                        <div class="location-detail">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Contact Numbers</h4>
+                                <p>Office: +254 723 456 789<br>Principal: +254 700 123 456<br>Admissions: +254 711 987 654</p>
+                            </div>
+                        </div>
+                        <div class="location-detail">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email Addresses</h4>
+                                <p>General: info@parangasecondary.sc.ke<br>Admissions: admissions@parangasecondary.sc.ke<br>Principal: principal@parangasecondary.sc.ke</p>
+                            </div>
+                        </div>
+                        <div class="location-detail">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Office Hours</h4>
+                                <p>Monday - Friday: 8:00 AM - 5:00 PM<br>Saturday: 9:00 AM - 1:00 PM<br>Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="transport-info">
+                        <h4>Transport Directions</h4>
+                        <p>From Nairobi: Take the Nairobi-Nakuru highway, exit at Limuru junction, proceed 15km towards Paranga town. The school is 2km from the town center.</p>
+                        <p>Public Transport: Matatus are available from Nairobi to Paranga town. From there, boda-boda or tuk-tuk services can bring you to the school gate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-container">
+                <h3 class="text-center">Contact Us</h3>
+                <p class="text-center" style="margin-bottom: 30px;">Have questions? Send us a message and we'll respond as soon as possible.</p>
+                
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Your Name *</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Your Email *</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">Subject *</label>
+                            <select id="contactSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="admissions">Admissions Inquiry</option>
+                                <option value="academics">Academic Information</option>
+                                <option value="fees">Fee Structure</option>
+                                <option value="careers">Careers & Employment</option>
+                                <option value="other">Other Inquiry</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactMessage">Your Message *</label>
+                        <textarea id="contactMessage" rows="5" required placeholder="Please provide details of your inquiry..."></textarea>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="btn">Send Message</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Paranga Secondary School</h3>
+                    <p>Striving for excellence in education since 1965. We are committed to nurturing young minds and building future leaders through quality education and holistic development.</p>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> Paranga Secondary School, P.O Box 123-40200, Paranga, Kenya</p>
+                        <p><i class="fas fa-phone"></i> +254 723 456 789</p>
+                        <p><i class="fas fa-envelope"></i> info@parangasecondary.sc.ke</p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#academics">Academics</a></li>
+                        <li><a href="#admissions">Admissions</a></li>
+                        <li><a href="#results">Results & Downloads</a></li>
+                        <li><a href="#statistics">School Statistics</a></li>
+                        <li><a href="#news">News & Events</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#results">School Calendar</a></li>
+                        <li><a href="#results">Fee Structure</a></li>
+                        <li><a href="#results">Prospectus</a></li>
+                        <li><a href="#results">Examination Results</a></li>
+                        <li><a href="#">Alumni Portal</a></li>
+                        <li><a href="#">PTA Information</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Sitemap</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter to receive updates on school news, events, and important announcements.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                    <div style="margin-top: 20px;">
+                        <h4>Emergency Contacts</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px;"><i class="fas fa-phone-alt"></i> School Nurse: +254 722 111 222</p>
+                        <p style="font-size: 0.9rem;"><i class="fas fa-shield-alt"></i> Security: +254 733 333 444</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2023 Paranga Secondary School. All Rights Reserved. | Designed for Excellence in Education | <a href="#" style="color: var(--secondary-color);">Privacy Policy</a> | <a href="#" style="color: var(--secondary-color);">Terms of Use</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Academics Tabs
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and buttons
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to current tab and button
+                document.getElementById(tabId).classList.add('active');
+                button.classList.add('active');
+            });
+        });
+        
+        // Form submissions
+        document.getElementById('admissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your application! We will contact you within 3 working days.');
+            this.reset();
+        });
+        
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will respond to your inquiry soon.');
+            this.reset();
+        });
+        
+        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            alert(`Thank you for subscribing with ${email}! You will receive our newsletter shortly.`);
+            this.reset();
+        });
+        
+        // Download button simulation
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            if (!btn.classList.contains('download-protected')) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const fileName = this.parentElement.querySelector('h4').textContent;
+                    alert(`Downloading: ${fileName}\n\nNote: This is a demonstration. In a real website, this would initiate a file download.`);
+                });
+            } else {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('This document requires teacher login. Please log in to access restricted resources.');
+                });
+            }
+        });
+        
+        // Initialize Leaflet Map
+        document.addEventListener('DOMContentLoaded', function() {
+            // School coordinates (approximate for Paranga, Kenya)
+            const schoolCoords = [-1.2921, 36.8219];
+            
+            // Initialize map
+            const map = L.map('schoolMap').setView(schoolCoords, 15);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add school marker
+            const schoolMarker = L.marker(schoolCoords).addTo(map);
+            schoolMarker.bindPopup("<b>Paranga Secondary School</b><br>P.O Box 123-40200<br>Paranga, Kenya").openPopup();
+            
+            // Add a circle around the school
+            L.circle(schoolCoords, {
+                color: 'var(--primary-color)',
+                fillColor: 'var(--secondary-color)',
+                fillOpacity: 0.2,
+                radius: 200
+            }).addTo(map);
+        });
+        
+        // Initialize Charts
+        window.onload = function() {
+            // Student Population Chart
+            const studentsCtx = document.getElementById('studentsChart').getContext('2d');
+            const studentsChart = new Chart(studentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Form 1', 'Form 2', 'Form 3', 'Form 4'],
+                    datasets: [{
+                        label: 'Number of Students',
+                        data: [320, 310, 305, 305],
+                        backgroundColor: [
+                            'rgba(26, 54, 93, 0.7)',
+                            'rgba(26, 54, 93, 0.8)',
+                            'rgba(26, 54, 93, 0.9)',
+                            'rgba(212, 175, 55, 0.9)'
+                        ],
+                        borderColor: [
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(212, 175, 55, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Students'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Teachers by Department Chart
+            const teachersCtx = document.getElementById('teachersChart').getContext('2d');
+            const teachersChart = new Chart(teachersCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sciences', 'Languages', 'Mathematics', 'Humanities', 'Technical', 'Others'],
+                    datasets: [{
+                        label: 'Teachers by Department',
+                        data: [18, 12, 10, 15, 8, 5],
+                        backgroundColor: [
+                            'rgba(26, 54, 93, 0.8)',
+                            'rgba(45, 90, 160, 0.8)',
+                            'rgba(212, 175, 55, 0.8)',
+                            'rgba(26, 54, 93, 0.6)',
+                            'rgba(45, 90, 160, 0.6)',
+                            'rgba(212, 175, 55, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(45, 90, 160, 1)',
+                            'rgba(212, 175, 55, 1)',
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(45, 90, 160, 1)',
+                            'rgba(212, 175, 55, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Subjects Chart
+            const subjectsCtx = document.getElementById('subjectsChart').getContext('2d');
+            const subjectsChart = new Chart(subjectsCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Compulsory', 'Sciences', 'Languages', 'Humanities', 'Technical', 'Electives'],
+                    datasets: [{
+                        label: 'Subjects by Category',
+                        data: [8, 7, 6, 5, 4, 2],
+                        backgroundColor: [
+                            'rgba(26, 54, 93, 0.7)',
+                            'rgba(26, 54, 93, 0.8)',
+                            'rgba(45, 90, 160, 0.7)',
+                            'rgba(45, 90, 160, 0.8)',
+                            'rgba(212, 175, 55, 0.7)',
+                            'rgba(212, 175, 55, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(26, 54, 93, 1)',
+                            'rgba(45, 90, 160, 1)',
+                            'rgba(45, 90, 160, 1)',
+                            'rgba(212, 175, 55, 1)',
+                            'rgba(212, 175, 55, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Gender Distribution Chart
+            const genderCtx = document.getElementById('genderChart').getContext('2d');
+            const genderChart = new Chart(genderCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Female Students', 'Male Students'],
+                    datasets: [{
+                        label: 'Gender Distribution',
+                        data: [55, 45],
+                        backgroundColor: [
+                            'rgba(212, 175, 55, 0.8)',
+                            'rgba(26, 54, 93, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(212, 175, 55, 1)',
+                            'rgba(26, 54, 93, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

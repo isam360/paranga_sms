@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Mutech</title>
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header {
+            width: 100%;
+            padding: 15px 0;
+            background-color: #fff;
+            text-align: left;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .back-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+        }
+
+        .back-link:hover {
+            text-decoration: none;
+        }
+
+        .content-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+        }
+
+        .form-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+        }
+
+        .form-control {
+            border: 2px solid #808080;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #666666;
+            box-shadow: 0 0 5px rgba(128, 128, 128, 0.5);
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+        }
+
+        .login-btn {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: rgb(235, 239, 243);
+            font-weight: bold;
+            color: gray;
+            border-radius: 5px;
+            border: none;
+            position: relative;
+        }
+
+        .login-btn:disabled {
+            background-color: rgb(235, 239, 243);
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1.5s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .forgot-password {
+            text-align: right;
+            width: 100%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            color: #0056b3;
+        }
+
+        /* Alert Container Styling */
+        .alert-container {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 1.5;
+            border-radius: 5px;
+            display: none;
+            min-height: 50px;
+            width: 100%;
+        }
+
+        .alert-container.alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-container.alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-container .close {
+            cursor: pointer;
+            float: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: inherit;
+            padding: 0 5px;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+
+{% include "includes/header.html" %}
+
+    <div class="content-container">
+        <div class="container">
+            <div class="form-container">
+                <!-- Updated alert container -->
+                <div id="alertContainer" class="alert-container"></div>
+
+                <h2 class="mb-4">Login MuGate | OAuth🚀</h2>
+                <form id="loginForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Username" required aria-label="Enter your username">
+                        <div id="usernameHelp" class="invalid-feedback">Please enter a valid username.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" required aria-label="Enter your password">
+                        <div class="invalid-feedback">Password is required.</div>
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="{% url 'OAuthForm:forgot_password' %}" class="text-primary">Forgotten your password?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="loginButton" disabled>
+                        Login
+                        <div class="loader" id="loader"></div> 
+                    </button>
+                </form>
+
+                <p class="text-center mt-3">No account? <a href="{% url 'OAuthForm:register' %}" class="text-primary">Create one here.</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const route = "https://web-mugate-api.onrender.com"; // Your API route
+            const route1 = "https://web-mugate-api.onrender.com"; // Dashboard route
+    
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const loader = document.getElementById('loader');
+            const alertContainer = document.getElementById('alertContainer');
+        
+            loginButton.disabled = false;
+        
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault(); 
+        
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+        
+                alertContainer.innerHTML = ''; 
+        
+                if (!username || !password) {
+                    showAlert('Both username and password are required.', 'danger');
+                    return;
+                }
+        
+                loginButton.disabled = true;
+                loader.style.display = 'inline-block';
+                loginButton.innerHTML = 'Logging in...';
+        
+                try {
+                    const response = await fetch(`${route}/api/v1/login/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password }),
+                    });
+        
+                    const data = await response.json();
+        
+                    if (response.ok) {
+                        // Store the access token in localStorage
+                        console.log(data);  // Log the entire response to inspect its structure
+                        console.log('Access token:', data.access);  // Correctly log the access token
+                        localStorage.setItem('access_token', data.access);  // Store the correct token
+                        
+                        // Log to console if the token was stored correctly
+                        console.log('Access token stored in localStorage:', localStorage.getItem('access_token'));
+                    
+                        // Redirect to the dashboard after successful login
+                        setTimeout(() => {
+                            window.location.href = route1 + '/dashboard/'; // Redirect to dashboard
+                        }, 500);
+                    } else {
+                        // Check if the error is coming from non_field_errors
+                        if (data.error && data.error.non_field_errors) {
+                            showAlert(data.error.non_field_errors[0], 'danger');
+                        } else {
+                            showAlert('Invalid username or password.', 'danger');
+                        }
+                    }
+                    
+                } catch (error) {
+                    showAlert('An error occurred during login. Please try again later.', 'danger');
+                } finally {
+                    loginButton.disabled = false;
+                    loader.style.display = 'none';
+                    loginButton.innerHTML = 'Login';
+                }
+            });
+        
+            function showAlert(message, type) {
+                alertContainer.classList.add(`alert-${type}`);
+                alertContainer.innerHTML = message;
+                alertContainer.style.display = 'block'; // Show the alert container
+        
+                // Automatically hide the alert after 5 seconds
+                setTimeout(() => {
+                    alertContainer.style.display = 'none';
+                    alertContainer.classList.remove(`alert-${type}`);
+                }, 5000);
+            }
+        });
+    </script>
+    
+    
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

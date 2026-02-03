@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Help Center | Paranga Secondary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a3d62;
+            --primary-dark: #062b45;
+            --secondary: #1e90ff;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-sm: 6px;
+            --header-height: 70px;
+            --footer-height: 300px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(15px, 4vw, 30px);
+        }
+
+        /* ===== Touch-Friendly Button Styles ===== */
+        button, 
+        .btn, 
+        a[role="button"] {
+            cursor: pointer;
+            touch-action: manipulation;
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== Top Header & Navigation ===== */
+        .top-header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 10px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 25px;
+            align-items: center;
+        }
+
+        .header-contact span {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .header-contact i {
+            margin-right: 8px;
+            color: var(--secondary);
+            min-width: 16px;
+        }
+
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+            padding: 4px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* ===== Main Header ===== */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(6, 43, 69, 0.2);
+        }
+
+        .school-brand {
+            flex: 1;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .school-brand h1 {
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 5px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .school-brand .tagline {
+            font-size: clamp(14px, 3vw, 16px);
+            opacity: 0.9;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .system-status {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            margin: 15px auto 0;
+            width: fit-content;
+            order: 3;
+        }
+
+        .system-status .live-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--success);
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== Help Hero Section ===== */
+        .help-hero {
+            background: linear-gradient(135deg, rgba(10, 61, 98, 0.9), rgba(6, 43, 69, 0.95));
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .help-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .help-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .help-hero h1 {
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .help-hero p {
+            font-size: clamp(16px, 3vw, 18px);
+            opacity: 0.95;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        .search-help {
+            max-width: 600px;
+            margin: 30px auto 0;
+            position: relative;
+        }
+
+        .search-help input {
+            width: 100%;
+            padding: 16px 60px 16px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .search-help input:focus {
+            outline: none;
+            box-shadow: 0 8px 30px rgba(30, 144, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .search-help button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-help button:hover,
+        .search-help button:active {
+            background: var(--primary);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* ===== Main Content Sections ===== */
+        main {
+            padding: 0 0 40px;
+            flex: 1;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: clamp(20px, 4vw, 26px);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header h2 i {
+            color: var(--secondary);
+            font-size: 1.2em;
+        }
+
+        /* ===== Help Categories ===== */
+        .help-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .category-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: clamp(20px, 4vw, 30px);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--secondary);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .category-card h3 {
+            color: var(--primary);
+            font-size: clamp(18px, 3vw, 22px);
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .category-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .category-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .category-link:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+            gap: 12px;
+        }
+
+        /* ===== FAQ Section ===== */
+        .faq-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            color: var(--primary);
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: clamp(14px, 2vw, 16px);
+            line-height: 1.6;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active {
+            border-left-color: var(--secondary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+            gap: 15px;
+            min-height: 70px;
+        }
+
+        .faq-question h3 {
+            color: var(--primary);
+            font-size: clamp(16px, 3vw, 18px);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .faq-question .number {
+            width: 35px;
+            height: 35px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .faq-toggle {
+            color: var(--secondary);
+            font-size: 20px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 1000px;
+        }
+
+        .faq-answer p {
+            color: var(--text);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .faq-answer ul {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .faq-answer li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .faq-answer li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            top: 8px;
+        }
+
+        /* ===== Contact Support ===== */
+        .contact-section {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: clamp(25px, 5vw, 40px);
+            margin-bottom: 60px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 5px solid var(--accent);
+        }
+
+        .contact-section h2 {
+            color: var(--primary);
+            font-size: clamp(24px, 5vw, 32px);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .contact-method {
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-method .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .contact-method h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: clamp(18px, 3vw, 22px);
+        }
+
+        .contact-method p {
+            color: var(--text-light);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .contact-method .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 10px;
+            padding: 8px 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .contact-method .contact-link:hover {
+            color: var(--primary);
+            gap: 12px;
+        }
+
+        /* ===== Quick Guides ===== */
+        .guides-section {
+            margin-bottom: 60px;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+            gap: 25px;
+        }
+
+        .guide-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: clamp(20px, 4vw, 30px);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--success);
+            height: 100%;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .guide-card h3 {
+            color: var(--primary);
+            font-size: clamp(18px, 3vw, 22px);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .guide-card h3 i {
+            color: var(--success);
+        }
+
+        .guide-card .steps {
+            margin: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .step-content p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ===== Footer ===== */
+        .main-footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            font-size: clamp(16px, 3vw, 20px);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .footer-links i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        /* ===== Back to Home ===== */
+        .back-home {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .back-home a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-height: 54px;
+        }
+
+        .back-home a:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(10, 61, 98, 0.2);
+            border-color: var(--secondary);
+        }
+
+        /* ===== Utility Classes ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 10px; }
+        .mt-2 { margin-top: 20px; }
+        .mb-1 { margin-bottom: 10px; }
+        .mb-2 { margin-bottom: 20px; }
+
+        /* ===== Responsive Design Improvements ===== */
+        
+        /* Tablet Devices (768px and below) */
+        @media (max-width: 768px) {
+            .header-content {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .header-contact, .header-links {
+                justify-content: center;
+            }
+            
+            .system-status {
+                margin-top: 15px;
+                order: 3;
+                width: auto;
+            }
+            
+            .help-hero {
+                padding: 30px 0;
+            }
+            
+            .category-card, 
+            .contact-method, 
+            .guide-card {
+                padding: 25px 20px;
+            }
+            
+            .contact-section {
+                padding: 30px 20px;
+            }
+            
+            .faq-question {
+                padding: 18px;
+                min-height: 60px;
+            }
+            
+            .faq-question h3 {
+                font-size: 16px;
+            }
+            
+            .back-home a {
+                padding: 14px 28px;
+                width: 90%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .search-help input {
+                font-size: 16px;
+                padding: 14px 55px 14px 20px;
+            }
+            
+            .search-help button {
+                width: 46px;
+                height: 46px;
+            }
+        }
+
+        /* Mobile Devices (480px and below) */
+        @media (max-width: 480px) {
+            .top-header {
+                padding: 12px 0;
+            }
+            
+            .header-contact span {
+                font-size: 13px;
+            }
+            
+            .header-links {
+                gap: 10px;
+            }
+            
+            .header-links a {
+                font-size: 13px;
+            }
+            
+            .main-header {
+                padding: 15px 0;
+            }
+            
+            .school-brand h1 {
+                font-size: 22px;
+            }
+            
+            .school-brand .tagline {
+                font-size: 14px;
+            }
+            
+            .help-hero {
+                padding: 25px 0;
+                margin-bottom: 30px;
+            }
+            
+            .help-hero h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .help-hero p {
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .search-help {
+                margin: 20px auto 0;
+            }
+            
+            .category-card,
+            .contact-method,
+            .guide-card {
+                padding: 20px 15px;
+            }
+            
+            .contact-methods {
+                gap: 20px;
+            }
+            
+            .guides-grid {
+                gap: 20px;
+            }
+            
+            .section {
+                margin-bottom: 40px;
+            }
+            
+            .faq-question {
+                padding: 15px;
+                min-height: 55px;
+            }
+            
+            .faq-question .number {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+            
+            .faq-question h3 {
+                font-size: 15px;
+            }
+            
+            .step {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .step-number {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+            
+            .footer-content {
+                gap: 25px;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+            
+            .footer-section h4::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-links a {
+                justify-content: center;
+            }
+        }
+
+        /* Very Small Devices (360px and below) */
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 12px;
+            }
+            
+            .help-hero h1 {
+                font-size: 22px;
+            }
+            
+            .help-hero p {
+                font-size: 14px;
+            }
+            
+            .search-help input {
+                font-size: 14px;
+                padding: 12px 50px 12px 18px;
+            }
+            
+            .category-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .contact-method .icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .faq-question h3 {
+                font-size: 14px;
+            }
+        }
+
+        /* Landscape Mode Optimization */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .help-hero {
+                padding: 20px 0;
+                margin-bottom: 30px;
+            }
+            
+            .section {
+                margin-bottom: 30px;
+            }
+            
+            .category-card,
+            .contact-method,
+            .guide-card {
+                padding: 20px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .top-header,
+            .search-help,
+            .back-home,
+            .footer-links a[href^="mailto:"],
+            .footer-links a[href^="tel:"] {
+                display: none;
+            }
+            
+            .help-hero {
+                background: none;
+                color: black;
+                padding: 20px 0;
+            }
+            
+            .category-card,
+            .contact-method,
+            .guide-card,
+            .faq-item {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .faq-item.active .faq-answer {
+                max-height: none;
+            }
+            
+            .faq-answer {
+                display: block;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header with Contact Info -->
+    <div class="top-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-contact">
+                    <span><i class="fas fa-map-marker-alt"></i> Chemba-District, Dodoma</span>
+                    <span><i class="fas fa-school"></i> Government Secondary School</span>
+                </div>
+                <div class="header-links">
+                    <a href="/"><i class="fas fa-home"></i> Home</a>
+                    <a href="https://parangasec.online/admin/login/"><i class="fas fa-sign-in-alt"></i> Staff Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="school-brand">
+                    <h1>PARANGA SECONDARY SCHOOL</h1>
+                    <p class="tagline">Academic Information Management System (AIMS) Help Center</p>
+                    <div class="system-status">
+                        <span class="live-dot" aria-hidden="true"></span>
+                        HELP CENTER <span class="sr-only"> - Live System Operational</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Help Hero Section -->
+    <section class="help-hero" aria-labelledby="hero-title">
+        <div class="container">
+            <div class="help-hero-content">
+                <h1 id="hero-title">How can we help you today?</h1>
+                <p>Get answers to common questions, learn how to use the system effectively, and find support for any issues you encounter.</p>
+
+                <div class="search-help">
+                    <label for="search-input" class="sr-only">Search help topics</label>
+                    <input type="text" id="search-input" placeholder="Search for help topics, guides, or answers..." aria-label="Search help topics">
+                    <button type="button" id="search-button" aria-label="Search">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Help Content -->
+    <main class="container">
+        <!-- Help Categories -->
+        <section class="section" aria-labelledby="categories-title">
+            <div class="section-header">
+                <h2 id="categories-title"><i class="fas fa-th-large" aria-hidden="true"></i> Help Categories</h2>
+            </div>
+            <div class="help-categories">
+                <!-- Category 1 -->
+                <article class="category-card">
+                    <div class="category-icon" aria-hidden="true">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Results & Announcements</h3>
+                    <p>Learn how to access, download, and understand academic results and announcements.</p>
+                    <a href="#results-guide" class="category-link">
+                        Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+
+                <!-- Category 2 -->
+                <article class="category-card">
+                    <div class="category-icon" aria-hidden="true">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>Account & Access</h3>
+                    <p>Information about user accounts, login issues, and access permissions.</p>
+                    <a href="#account-faq" class="category-link">
+                        Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+
+                <!-- Category 3 -->
+                <article class="category-card">
+                    <div class="category-icon" aria-hidden="true">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Downloads & Documents</h3>
+                    <p>Troubleshoot download issues and learn about available document formats.</p>
+                    <a href="#downloads-faq" class="category-link">
+                        Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="section faq-section" id="faq" aria-labelledby="faq-title">
+            <div class="section-header">
+                <h2 id="faq-title"><i class="fas fa-question-circle" aria-hidden="true"></i> Frequently Asked Questions</h2>
+                <span class="updated-info" aria-hidden="true">Quick Answers</span>
+            </div>
+
+            <div class="faq-container">
+                <!-- FAQ Item 1 -->
+                <article class="faq-item" id="results-faq">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq1-answer">
+                        <h3><span class="number" aria-hidden="true">1</span> How do I access student results?</h3>
+                        <span class="faq-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="faq1-answer" class="faq-answer" role="region" aria-labelledby="faq1-question">
+                        <p>To access student results:</p>
+                        <ul>
+                            <li>Navigate to the "Latest Results & Announcements" section on the homepage</li>
+                            <li>Look for result cards with the "Result" badge</li>
+                            <li>Click the "Download" button to access the PDF file</li>
+                            <li>Results are typically available within 48 hours after exams are completed</li>
+                        </ul>
+                        <p><strong>Note:</strong> Some results may require specific access permissions.</p>
+                    </div>
+                </article>
+
+                <!-- FAQ Item 2 -->
+                <article class="faq-item" id="new-announcements">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq2-answer">
+                        <h3><span class="number" aria-hidden="true">2</span> What do the twinkling/new announcements mean?</h3>
+                        <span class="faq-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="faq2-answer" class="faq-answer" role="region" aria-labelledby="faq2-question">
+                        <p>The twinkling animation indicates announcements that have been posted within the last 7 days. This feature:</p>
+                        <ul>
+                            <li>Highlights new content for easy identification</li>
+                            <li>Automatically removes the animation after 1 week</li>
+                            <li>Includes a "NEW" badge for visual recognition</li>
+                            <li>Helps prioritize recent important information</li>
+                        </ul>
+                        <p>This ensures you never miss important updates while maintaining a clean interface.</p>
+                    </div>
+                </article>
+
+                <!-- FAQ Item 3 -->
+                <article class="faq-item" id="downloads-faq">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq3-answer">
+                        <h3><span class="number" aria-hidden="true">3</span> Can't download documents? Troubleshooting guide</h3>
+                        <span class="faq-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="faq3-answer" class="faq-answer" role="region" aria-labelledby="faq3-question">
+                        <p>If you're experiencing download issues, try these solutions:</p>
+                        <ul>
+                            <li><strong>Check your internet connection</strong> - Ensure stable connectivity</li>
+                            <li><strong>Clear browser cache</strong> - Sometimes cached data causes issues</li>
+                            <li><strong>Try a different browser</strong> - Chrome, Firefox, or Safari</li>
+                            <li><strong>Disable pop-up blockers</strong> - Some downloads may be blocked</li>
+                            <li><strong>Check file permissions</strong> - Ensure you have access rights</li>
+                        </ul>
+                        <p>If problems persist, contact technical support with details of the error.</p>
+                    </div>
+                </article>
+
+                <!-- FAQ Item 4 -->
+                <article class="faq-item" id="account-faq">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq4-answer">
+                        <h3><span class="number" aria-hidden="true">4</span> Who can access the staff login portal?</h3>
+                        <span class="faq-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="faq4-answer" class="faq-answer" role="region" aria-labelledby="faq4-question">
+                        <p>The staff login portal is exclusively for:</p>
+                        <ul>
+                            <li>Registered teaching staff of Paranga Secondary School</li>
+                            <li>School administration personnel</li>
+                            <li>Authorized support staff with proper credentials</li>
+                        </ul>
+                        <p><strong>Access Process:</strong></p>
+                        <ul>
+                            <li>Use official school email credentials</li>
+                            <li>First-time users need to register through administration</li>
+                            <li>Password resets require verification through school office</li>
+                            <li>Access is monitored and logged for security purposes</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- FAQ Item 5 -->
+                <article class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq5-answer">
+                        <h3><span class="number" aria-hidden="true">5</span> How current is the data displayed?</h3>
+                        <span class="faq-toggle" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div id="faq5-answer" class="faq-answer" role="region" aria-labelledby="faq5-question">
+                        <p>The system displays real-time or near real-time data:</p>
+                        <ul>
+                            <li><strong>Statistics</strong> - Updated automatically when new data is entered</li>
+                            <li><strong>Announcements</strong> - Posted immediately by authorized staff</li>
+                            <li><strong>Results</strong> - Available as soon as they are processed and verified</li>
+                            <li><strong>System Status</strong> - Monitored 24/7 with live indicators</li>
+                        </ul>
+                        <p>The "LIVE SYSTEM OPERATIONAL" indicator confirms real-time functionality. Data synchronization occurs every 15 minutes during normal operations.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Quick Guides -->
+        <section class="section guides-section" aria-labelledby="guides-title">
+            <div class="section-header">
+                <h2 id="guides-title"><i class="fas fa-book-open" aria-hidden="true"></i> Quick User Guides</h2>
+                <span class="updated-info" aria-hidden="true">Step-by-Step</span>
+            </div>
+
+            <div class="guides-grid">
+                <!-- Guide 1 -->
+                <article class="guide-card" id="results-guide">
+                    <h3><i class="fas fa-chart-line" aria-hidden="true"></i> Finding & Downloading Results</h3>
+                    <p>Follow these steps to access academic results:</p>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">1</div>
+                            <div class="step-content">
+                                <h4>Navigate to Announcements</h4>
+                                <p>Scroll to the "Latest Results & Announcements" section on the homepage</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">2</div>
+                            <div class="step-content">
+                                <h4>Identify Result Cards</h4>
+                                <p>Look for cards with the "Result" badge (green color)</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">3</div>
+                            <div class="step-content">
+                                <h4>Filter if Needed</h4>
+                                <p>Use the "Results" filter button to show only result announcements</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">4</div>
+                            <div class="step-content">
+                                <h4>Download Document</h4>
+                                <p>Click the "Download" button on the relevant result card</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Guide 2 -->
+                <article class="guide-card">
+                    <h3><i class="fas fa-bell" aria-hidden="true"></i> Staying Updated with Announcements</h3>
+                    <p>Never miss important school announcements:</p>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">1</div>
+                            <div class="step-content">
+                                <h4>Check New Announcements</h4>
+                                <p>Look for twinkling cards or "NEW" badges for recent posts</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">2</div>
+                            <div class="step-content">
+                                <h4>Use Search Feature</h4>
+                                <p>Search for specific topics using the search box</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">3</div>
+                            <div class="step-content">
+                                <h4>Filter by Type</h4>
+                                <p>Use filter buttons to view only announcements, notices, or updates</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" aria-hidden="true">4</div>
+                            <div class="step-content">
+                                <h4>Sort Options</h4>
+                                <p>Sort by newest, priority, or title to organize information</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact Support -->
+        <section class="section contact-section" aria-labelledby="contact-title">
+            <div class="section-header">
+                <h2 id="contact-title"><i class="fas fa-headset" aria-hidden="true"></i> Contact Support</h2>
+                <span class="updated-info" aria-hidden="true">Get Help</span>
+            </div>
+
+            <p class="text-center mb-2" style="color: var(--text-light);">Our support team is ready to assist you with any questions or issues.</p>
+
+            <div class="contact-methods">
+                <article class="contact-method">
+                    <div class="icon" aria-hidden="true">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Support</h3>
+                    <p>For detailed inquiries and documentation requests</p>
+                    <a href="mailto:parangasecondary@gmail.com" class="contact-link">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>parangasecondary@gmail.com
+                    </a>
+                </article>
+
+                <article class="contact-method">
+                    <div class="icon" aria-hidden="true">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone Support</h3>
+                    <p>Available during school hours (8:00 AM - 4:00 PM)</p>
+                    <a href="tel:+255610117824" class="contact-link">
+                        <i class="fas fa-phone-alt" aria-hidden="true"></i> +255 (0) 61 011 7824
+                    </a>
+                </article>
+
+                <article class="contact-method">
+                    <div class="icon" aria-hidden="true">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>Technical Administrator</h3>
+                    <p>For system-specific technical issues</p>
+                    <a href="mailto:contact@isihakaabdallah25@gmail.com" class="contact-link">
+                        <i class="fas fa-user-cog" aria-hidden="true"></i> Isihaka Abdallah Muhunzi
+                    </a>
+                </article>
+            </div>
+
+            <p class="text-center mt-1" style="color: var(--text-light);">
+                <i class="fas fa-clock" aria-hidden="true"></i> Average response time: 24 hours (emails) | Immediate (phone during hours)
+            </p>
+        </section>
+
+        <!-- Back to Home -->
+        <div class="back-home">
+            <a href="/" class="btn-home">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Homepage
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="/#announcements-section"><i class="fas fa-chart-bar"></i> Latest Results</a></li>
+                        <li><a href="/help/#faq"><i class="fas fa-question-circle"></i> FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Information</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="contact-info"><i class="fas fa-map-marker-alt"></i> Paranga Secondary School</a></li>
+                        <li><a href="#" class="contact-info"><i class="fas fa-location-arrow"></i> Chemba District, Dodoma</a></li>
+                        <li><a href="tel:+255610117824"><i class="fas fa-phone"></i> +255 (0) 61 011 7824</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                © <span id="current-year"></span> Paranga Secondary School Help Center | Version 2.1
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // FAQ Toggle Functionality with Accessibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const toggle = item.querySelector('.faq-toggle');
+                
+                // Set initial ARIA attributes
+                question.setAttribute('aria-expanded', 'false');
+                answer.setAttribute('aria-hidden', 'true');
+                
+                question.addEventListener('click', () => {
+                    const isExpanded = question.getAttribute('aria-expanded') === 'true';
+                    
+                    // Close all other items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                            otherItem.querySelector('.faq-answer').setAttribute('aria-hidden', 'true');
+                        }
+                    });
+
+                    // Toggle current item
+                    item.classList.toggle('active');
+                    question.setAttribute('aria-expanded', !isExpanded);
+                    answer.setAttribute('aria-hidden', isExpanded);
+                    
+                    // Announce to screen readers
+                    if (!isExpanded) {
+                        const questionText = question.querySelector('h3').textContent;
+                        announceToScreenReader(`Expanded: ${questionText}`);
+                    }
+                });
+
+                // Keyboard support
+                question.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        question.click();
+                    }
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+
+            function performSearch() {
+                const query = searchInput.value.toLowerCase().trim();
+                if (query) {
+                    let foundMatch = false;
+                    const searchResults = [];
+
+                    faqItems.forEach(item => {
+                        const question = item.querySelector('.faq-question h3').textContent.toLowerCase();
+                        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                        if (question.includes(query) || answer.includes(query)) {
+                            item.classList.add('active');
+                            searchResults.push(item);
+                            foundMatch = true;
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+
+                    if (foundMatch) {
+                        searchResults[0].scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        announceToScreenReader(`Found ${searchResults.length} matching results`);
+                    } else {
+                        announceToScreenReader('No matching results found. Try different keywords or browse the categories.');
+                        // Optional: Show a temporary message
+                        showNotification('No matching results found. Try different keywords.');
+                    }
+                }
+            }
+
+            function showNotification(message) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--accent);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            // Add CSS for notifications
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Auto-open FAQ if URL has hash
+            if (window.location.hash) {
+                const targetItem = document.querySelector(window.location.hash);
+                if (targetItem && targetItem.classList.contains('faq-item')) {
+                    setTimeout(() => {
+                        targetItem.classList.add('active');
+                        targetItem.querySelector('.faq-question').setAttribute('aria-expanded', 'true');
+                        targetItem.querySelector('.faq-answer').setAttribute('aria-hidden', 'false');
+                        targetItem.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }, 300);
+                }
+            }
+
+            // Touch device detection for hover effects
+            function isTouchDevice() {
+                return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            }
+
+            if (isTouchDevice()) {
+                document.body.classList.add('touch-device');
+            }
+
+            // Screen reader announcement function
+            function announceToScreenReader(message) {
+                const announcement = document.createElement('div');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.setAttribute('aria-atomic', 'true');
+                announcement.classList.add('sr-only');
+                announcement.textContent = message;
+                
+                document.body.appendChild(announcement);
+                
+                setTimeout(() => {
+                    announcement.remove();
+                }, 1000);
+            }
+
+            // Add responsive class on resize
+            function handleResize() {
+                if (window.innerWidth <= 480) {
+                    document.body.classList.add('mobile-view');
+                } else {
+                    document.body.classList.remove('mobile-view');
+                }
+            }
+
+            // Initial check
+            handleResize();
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
+</body>
+</html>

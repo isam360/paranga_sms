@@ -1,0 +1,2093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Paranga Secondary School Digital Academic Management System - Official platform for results, announcements, and school administration.">
+    <title>Paranga Secondary School | Digital Academic Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ROOT VARIABLES & RESET ===== */
+        :root {
+            --primary: #0a3d62;
+            --primary-dark: #062b45;
+            --secondary: #1e90ff;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #3498db;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+
+        /* ===== CRITICAL FIXES FOR PAGE FITTING ===== */
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Segoe UI, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== LAYOUT CONTAINERS ===== */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(15px, 3vw, 20px);
+            position: relative;
+        }
+
+        main, header, footer {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        section, div, article {
+            max-width: 100%;
+        }
+
+        /* ===== TOP HEADER ===== */
+        .top-header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 12px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        .top-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .header-contact span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .header-contact i {
+            color: var(--secondary);
+            min-width: 16px;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .header-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* ===== MAIN HEADER ===== */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(6, 43, 69, 0.2);
+            width: 100%;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .school-brand {
+            flex: 1;
+            min-width: 0; /* Critical for flexbox shrinking */
+        }
+
+        .school-brand h1 {
+            font-size: clamp(22px, 4vw, 28px);
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .school-brand .tagline {
+            font-size: clamp(14px, 2vw, 16px);
+            opacity: 0.9;
+            font-weight: 400;
+            word-wrap: break-word;
+        }
+
+        .system-status {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: clamp(8px, 2vw, 12px) clamp(16px, 3vw, 24px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: clamp(12px, 2vw, 14px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .system-status .live-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--success);
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 1.5s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            flex: 1;
+            padding: 40px 0;
+            width: 100%;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.5s ease-out;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: clamp(18px, 3vw, 22px);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            word-break: break-word;
+        }
+
+        .updated-info {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ===== INTRO PANEL ===== */
+        .intro-panel {
+            background-color: var(--card);
+            padding: clamp(20px, 3vw, 30px);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--secondary);
+            margin-bottom: 30px;
+            animation: slideInLeft 0.5s ease-out;
+            width: 100%;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .intro-panel p {
+            font-size: clamp(15px, 2vw, 16px);
+            margin: 0;
+            color: var(--text);
+            line-height: 1.8;
+            word-wrap: break-word;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .stat-card {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3vw, 25px) clamp(15px, 2vw, 20px);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--info));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .icon {
+            font-size: clamp(28px, 4vw, 32px);
+            color: var(--secondary);
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover .icon {
+            transform: scale(1.1);
+        }
+
+        .stat-card .value {
+            font-size: clamp(32px, 5vw, 36px);
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            line-height: 1.2;
+            margin: 10px 0;
+            word-break: break-word;
+        }
+
+        .stat-card .label {
+            font-size: clamp(14px, 2vw, 15px);
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* ===== STATUS PANEL ===== */
+        .status-panel {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3vw, 25px);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            animation: slideInRight 0.5s ease-out;
+            width: 100%;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .session-info {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .session-info h3 {
+            font-size: clamp(16px, 2.5vw, 18px);
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            word-break: break-word;
+        }
+
+        .session-details {
+            background-color: #f8fafc;
+            padding: clamp(15px, 2.5vw, 20px);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            width: 100%;
+        }
+
+        .session-details p {
+            margin: 8px 0;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            word-break: break-word;
+        }
+
+        .badge-open {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .badge-locked {
+            background-color: #fdecea;
+            color: #b71c1c;
+        }
+
+        /* ===== ANNOUNCEMENTS CONTROLS ===== */
+        .announcements-controls {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3vw, 25px);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+            align-items: end;
+            width: 100%;
+        }
+
+        .search-filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .search-filter-group label {
+            font-size: clamp(13px, 2vw, 14px);
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            word-break: break-word;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            background-color: #fff;
+            font-family: inherit;
+            max-width: 100%;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 20px);
+            background-color: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: clamp(13px, 2vw, 14px);
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .filter-btn:hover {
+            background-color: #eef2f7;
+            border-color: var(--secondary);
+        }
+
+        .filter-btn.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .filter-btn .badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: inherit;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ===== RESULTS INFO ===== */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .results-count {
+            font-size: clamp(14px, 2vw, 16px);
+            color: var(--text);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .results-count strong {
+            color: var(--primary);
+        }
+
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sort-options label {
+            font-size: clamp(13px, 2vw, 14px);
+            color: var(--text-light);
+        }
+
+        .sort-options select {
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background-color: white;
+            font-size: clamp(13px, 2vw, 14px);
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--transition);
+            max-width: 200px;
+        }
+
+        .sort-options select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        /* ===== TWINKLING EFFECT ===== */
+        .announcement-card.new-announcement {
+            position: relative;
+            overflow: hidden;
+            animation: twinkle-glow 2s ease-in-out infinite alternate;
+            border-left: 4px solid var(--secondary);
+        }
+
+        @keyframes twinkle-glow {
+            0% {
+                box-shadow: 0 0 15px rgba(30, 144, 255, 0.2),
+                            var(--shadow);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(30, 144, 255, 0.5),
+                            0 0 35px rgba(231, 76, 60, 0.2),
+                            0 10px 35px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        .announcement-card.new-announcement::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, 
+                        transparent 25%,
+                        rgba(30, 144, 255, 0.3) 50%,
+                        transparent 75%);
+            background-size: 200% 200%;
+            animation: border-shimmer 3s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes border-shimmer {
+            0% { background-position: -200% -200%; }
+            100% { background-position: 200% 200%; }
+        }
+
+        /* ===== ANNOUNCEMENT GRID ===== */
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
+            gap: clamp(20px, 3vw, 25px);
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .announcement-card {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3vw, 25px);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--accent);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .announcement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .announcement-title {
+            font-size: clamp(16px, 2.5vw, 18px);
+            font-weight: 600;
+            color: var(--primary);
+            flex: 1;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            word-break: break-word;
+            min-width: 0; /* Critical for text truncation */
+        }
+
+        .new-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            animation: badge-pulse 2s ease-in-out infinite;
+            box-shadow: 0 3px 10px rgba(30, 144, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        @keyframes badge-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .new-badge .fa-star {
+            animation: star-spin 4s linear infinite;
+        }
+
+        @keyframes star-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .announcement-type-badge {
+            font-size: clamp(10px, 1.5vw, 11px);
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .badge-result {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .badge-announcement {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .badge-notice {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-update {
+            background-color: #f3e5f5;
+            color: #4a148c;
+        }
+
+        .announcement-message {
+            color: var(--text);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        .announcement-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: clamp(10px, 2vw, 15px);
+            width: 100%;
+        }
+
+        .announcement-meta {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2vw, 15px);
+            font-size: clamp(12px, 1.5vw, 13px);
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .upload-date, .announcement-priority {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .priority-high {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .priority-normal {
+            color: var(--success);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary);
+            color: white;
+            padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 18px);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: clamp(13px, 1.5vw, 14px);
+            font-weight: 500;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+        }
+
+        /* ===== NO RESULTS ===== */
+        .no-results {
+            text-align: center;
+            padding: clamp(40px, 5vw, 60px) 20px;
+            background-color: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .no-results i {
+            font-size: clamp(40px, 6vw, 48px);
+            color: var(--border);
+            margin-bottom: 20px;
+        }
+
+        .no-results p {
+            color: var(--text-light);
+            font-size: clamp(15px, 2vw, 16px);
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .no-results .hint {
+            font-size: clamp(13px, 1.5vw, 14px);
+            color: #999;
+        }
+
+        /* ===== CHART CONTAINER ===== */
+        .chart-container {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3vw, 25px);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .chart-header h3 {
+            color: var(--primary);
+            font-size: clamp(16px, 2.5vw, 18px);
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100%;
+            max-height: 300px;
+        }
+
+        /* ===== NO DATA ALERT ===== */
+        .no-data-alert {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: var(--radius);
+            padding: clamp(30px, 4vw, 40px);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--warning);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            width: 100%;
+        }
+
+        .alert-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(20px, 3vw, 25px);
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .alert-icon {
+            width: clamp(80px, 10vw, 100px);
+            height: clamp(80px, 10vw, 100px);
+            background: linear-gradient(135deg, var(--warning), #f6b93b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: clamp(36px, 5vw, 48px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+            animation: pulse-soft 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .alert-text h3 {
+            color: var(--primary);
+            font-size: clamp(20px, 3vw, 24px);
+            margin-bottom: 15px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .alert-text p {
+            color: var(--text-light);
+            font-size: clamp(15px, 2vw, 16px);
+            line-height: 1.7;
+            max-width: min(700px, 100%);
+            margin: 0 auto 25px;
+            word-break: break-word;
+        }
+
+        .alert-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(15px, 2.5vw, 20px);
+            margin-top: 25px;
+            max-width: min(800px, 100%);
+            width: 100%;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: clamp(12px, 2vw, 15px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+
+        .detail-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .detail-item i {
+            color: var(--warning);
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .detail-item span {
+            color: var(--text);
+            font-size: clamp(13px, 1.5vw, 14px);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .alert-footer {
+            display: flex;
+            justify-content: center;
+            gap: clamp(15px, 2.5vw, 20px);
+            flex-wrap: wrap;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+            width: 100%;
+        }
+
+        .alert-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 3vw, 25px);
+            border-radius: 50px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            font-size: clamp(14px, 1.5vw, 16px);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .alert-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(10, 61, 98, 0.2);
+        }
+
+        .alert-btn.secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .alert-btn.secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== GOVERNANCE PANEL ===== */
+        .governance-panel {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: clamp(25px, 3vw, 30px);
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary);
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .governance-panel h3 {
+            color: var(--primary);
+            font-size: clamp(18px, 2.5vw, 20px);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            word-break: break-word;
+        }
+
+        .governance-panel p {
+            word-break: break-word;
+        }
+
+        .admin-info {
+            background-color: #f8fafc;
+            padding: clamp(15px, 2.5vw, 20px);
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .admin-info h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: clamp(16px, 2vw, 17px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            word-break: break-word;
+        }
+
+        .admin-info a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            transition: color 0.3s;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        .admin-info a:hover {
+            color: var(--secondary);
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: clamp(30px, 4vw, 40px) 0 20px;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(25px, 3vw, 30px);
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .footer-section h4 {
+            font-size: clamp(16px, 2.5vw, 18px);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            word-break: break-word;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .contact-info {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-info li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            word-break: break-word;
+        }
+
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            word-break: break-all;
+        }
+
+        .contact-info a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: clamp(13px, 1.5vw, 14px);
+            color: #ccc;
+            word-break: break-word;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .top-header .container {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .header-contact {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .header-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .main-header .container {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .school-brand {
+                width: 100%;
+                text-align: center;
+            }
+
+            .system-status {
+                width: auto;
+                justify-content: center;
+                margin: 0 auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .announcements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .announcements-controls {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .results-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .alert-footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .alert-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .intro-panel,
+            .status-panel,
+            .announcement-card,
+            .chart-container,
+            .governance-panel {
+                padding: 20px;
+            }
+
+            .stat-card .value {
+                font-size: 32px;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .announcement-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .announcement-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .announcement-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .school-brand h1 {
+                font-size: 20px;
+            }
+
+            .system-status {
+                font-size: 12px;
+                padding: 8px 16px;
+                white-space: normal;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .school-brand h1 {
+                font-size: 18px;
+            }
+            
+            .header-contact span {
+                font-size: 12px;
+            }
+            
+            .stat-card {
+                padding: 15px 10px;
+            }
+        }
+
+        /* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .top-header,
+            .header-links,
+            .filter-buttons,
+            .download-btn,
+            .alert-btn,
+            .main-footer {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                font-size: 12pt;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .section {
+                break-inside: avoid;
+                margin-bottom: 20px;
+            }
+
+            .announcement-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 15px;
+            }
+            
+            a[href]:after {
+                content: " (" attr(href) ")";
+                font-size: 0.9em;
+                font-weight: normal;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .mw-100 {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-map-marker-alt"></i> Chemba-District, Dodoma</span> <br>
+                <span><i class="fas fa-school"></i> Government Secondary School</span>
+            </div>
+            <div class="header-links">
+                <a href="https://parangasec.online/admin/login/">
+                    <i class="fas fa-sign-in-alt"></i> Staff Login
+                </a>
+                <a href="/help/">
+                    <i class="fas fa-question-circle"></i> Help
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="school-brand">
+                <h1>PARANGA SECONDARY SCHOOL</h1>
+                <p class="tagline">Academic Intelligence Portal for Teachers & Parents</p>
+            </div>
+            <div class="system-status">
+                <span class="live-dot"></span>
+                PORTAL LIVE - UPDATES FLOWING
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Introduction -->
+        <section class="section">
+            <div class="intro-panel">
+                <p>Empowering teachers with smart tools and parents with clear visibility 
+into student progress through digital transparency.</p>
+            </div></p>
+            </div>
+        </section>
+
+        <!-- System Overview -->
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> System Overview</h2>
+                <span class="updated-info">Real-time Statistics</span>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <span class="value">{{ students_count }}</span>
+                    <span class="label">Students</span>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <span class="value">{{ teachers_count }}</span>
+                    <span class="label">Teachers</span>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-book-open"></i></div>
+                    <span class="value">{{ subjects_count }}</span>
+                    <span class="label">Subjects</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academic Status -->
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-check"></i> Academic Status</h2>
+            </div>
+            <div class="status-panel">
+                <div class="session-info">
+                    <h3><i class="fas fa-calendar-alt"></i> Current Examination Session</h3>
+                    <div class="session-details">
+                        {% if latest_exam %}
+                            <p><strong>Session:</strong> {{ latest_exam.get_form_display }} {{ latest_exam.stream }} – {{ latest_exam.term }} {{ latest_exam.year }}</p>
+                            <p><strong>Status:</strong>
+                            {% if latest_exam.is_locked %}
+                                <span class="status-badge badge-locked"><i class="fas fa-lock"></i> Results Locked</span>
+                            {% else %}
+                                <span class="status-badge badge-open"><i class="fas fa-lock-open"></i> Results Open for Processing</span>
+                            {% endif %}
+                            </p>
+                        {% else %}
+                            <p>No active exam session available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Results & Announcements -->
+        <section class="section" id="announcements-section">
+            <div class="section-header">
+                <h2><i class="fas fa-bullhorn"></i> Latest Results & Announcements</h2>
+            </div>
+
+            <!-- Enhanced Controls -->
+            <div class="announcements-controls">
+                <div class="search-filter-group">
+                    <label for="searchAnnouncements"><i class="fas fa-search"></i> Search Announcements</label>
+                    <div class="search-box">
+                        <input type="text" id="searchAnnouncements" placeholder="Search by title, content, or keyword...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <label><i class="fas fa-filter"></i> Filter by Type</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-layer-group"></i> All
+                            <span class="badge" id="count-all">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="new">
+                            <i class="fas fa-star"></i> New This Week
+                            <span class="badge" id="count-new">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="result">
+                            <i class="fas fa-chart-bar"></i> Results
+                            <span class="badge" id="count-result">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="announcement">
+                            <i class="fas fa-bullhorn"></i> Announcements
+                            <span class="badge" id="count-announcement">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <div class="results-count">
+                    Showing <strong id="showing-count">0</strong> of <strong id="total-count">0</strong> announcements
+                </div>
+                <div class="sort-options">
+                    <label for="sortAnnouncements"><i class="fas fa-sort"></i> Sort by:</label>
+                    <select id="sortAnnouncements">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="priority">Priority (High to Low)</option>
+                        <option value="new-status">New First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Announcements Grid -->
+            {% if attachments %}
+            <div class="announcements-grid" id="announcementsGrid">
+                {% for ann in attachments %}
+                {% with announcement_type=ann.announcement_type|default:"announcement" priority=ann.priority|default:"normal" %}
+                <div class="announcement-card {% if ann in active_announcements %}new-announcement{% endif %}" 
+                     data-id="{{ ann.id }}"
+                     data-type="{{ announcement_type }}"
+                     data-status="{% if ann in active_announcements %}new{% else %}old{% endif %}"
+                     data-priority="{{ priority }}"
+                     data-date="{{ ann.created_at|date:'U' }}"
+                     data-title="{{ ann.title|lower }}">
+
+                    <div class="announcement-header">
+                        <div class="announcement-title">
+                            {{ ann.title }}
+                            {% if ann in active_announcements %}
+                            <span class="new-badge">
+                                <i class="fas fa-star"></i> NEW
+                            </span>
+                            {% endif %}
+                        </div>
+                        <span class="announcement-type-badge badge-{{ announcement_type }}">
+                            {% if announcement_type == 'result' %}
+                                <i class="fas fa-chart-bar"></i> Result
+                            {% elif announcement_type == 'notice' %}
+                                <i class="fas fa-exclamation-circle"></i> Notice
+                            {% elif announcement_type == 'update' %}
+                                <i class="fas fa-sync-alt"></i> Update
+                            {% else %}
+                                <i class="fas fa-bullhorn"></i> Announcement
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="announcement-message">
+                        {{ ann.message|truncatewords:40 }}
+                    </div>
+
+                    <div class="announcement-footer">
+                        <div class="announcement-meta">
+                            <span class="upload-date">
+                                <i class="far fa-clock"></i> 
+                                <span class="upload-timestamp" data-timestamp="{{ ann.created_at|date:'U' }}">
+                                    {{ ann.created_at|date:"d M Y H:i" }}
+                                </span>
+                            </span>
+                            <span class="announcement-priority">
+                                <i class="fas fa-flag"></i>
+                                <span class="priority-{{ priority }}">
+                                    {% if priority == 'high' %}
+                                        <strong>High Priority</strong>
+                                    {% else %}
+                                        Normal Priority
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+
+                        {% if ann.attachment %}
+                        <a href="{{ ann.attachment.url }}?fl_attachment" class="download-btn" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="noResultsMessage" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <p>No announcements match your search criteria</p>
+                <p class="hint">Try adjusting your search or filter terms</p>
+            </div>
+
+            {% else %}
+            <div class="no-data-alert">
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="alert-text">
+                        <h3>No Announcements Available</h3>
+                        <p>There are currently no announcements or results available. Check back later for updates.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Performance Chart -->
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Performance per Form</h2>
+            </div>
+            
+            {% if has_performance_data %}
+            <div class="chart-container" id="performanceChartContainer">
+                <div class="chart-header">
+                    <h3>Average Score Distribution</h3>
+                    <span class="chart-info">Academic Year {{ now|date:"Y" }}</span>
+                </div>
+                <canvas id="performanceChart"></canvas>
+            </div>
+            {% else %}
+            <div class="no-data-alert">
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="alert-text">
+                        <h3>Performance Data Not Available</h3>
+                        <p>No performance data has been recorded yet for the current academic year. Performance statistics will be displayed here once examination results are processed and uploaded.</p>
+                        <div class="alert-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Data updates after each examination session</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Check back after mid-term or final exams</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Contact academic office for more information</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-footer">
+                    <a href="#announcements-section" class="alert-btn">
+                        <i class="fas fa-bullhorn"></i> Check Latest Results
+                    </a>
+                    <a href="/help/#faq" class="alert-btn secondary">
+                        <i class="fas fa-question-circle"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- System Governance -->
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-shield-alt"></i> System Governance & Ownership</h2>
+            </div>
+            <div class="governance-panel">
+                <p>This purpose-built academic management system was developed in-house to exclusively support the official academic operations of Paranga Secondary School.</p>
+
+                <div class="admin-info">
+                    <h4><i class="fas fa-user-tie"></i> System Developer & Administrator</h4>
+                    <p><strong>Isihaka Abdallah Muhunzi</strong><br>
+                    Science Teacher & Information Systems Graduate<br>
+                    Paranga Secondary School – Chemba, Dodoma<br>
+                    <a href="mailto:isihakaabdallah25@gmail.com" title="Send Email">
+                        <i class="fas fa-envelope"></i>
+                        isihakaabdallah25@gmail.com
+                    </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#announcements-section"><i class="fas fa-chart-bar"></i> Latest Results</a></li>
+                        <li><a href="#announcements-section"><i class="fas fa-download"></i> Downloads</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Information</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Paranga Secondary School</li>
+                        <li><i class="fas fa-location-arrow"></i> Chemba District, Dodoma</li>
+                        <li>
+                            <a href="https://wa.me/255610117824" target="_blank" rel="noopener noreferrer">
+                                <i class="fas fa-phone"></i> +255 (0) 61 011 7824
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:info@parangasecondary@gmail.com">
+                                <i class="fas fa-envelope"></i> info@parangasecondary@gmail.com
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                © {{ now|date:"Y" }} Paranga Secondary School | Official Digital Academic Management System | All Rights Reserved
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Counter Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-card .value');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent) || 0;
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 30);
+            });
+
+            // Performance Chart
+            const performanceChartEl = document.getElementById('performanceChart');
+            if (performanceChartEl) {
+                const ctx = performanceChartEl.getContext('2d');
+                const performanceValues = {{ performance_values|safe }};
+                const performanceLabels = {{ performance_labels|safe }};
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: performanceLabels,
+                        datasets: [{
+                            label: 'Average Score',
+                            data: performanceValues,
+                            backgroundColor: 'rgba(30, 144, 255, 0.7)',
+                            borderColor: 'rgba(30, 144, 255, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Average: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Average Score (%)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Announcements Management System
+            const announcements = document.querySelectorAll('.announcement-card');
+            const searchInput = document.getElementById('searchAnnouncements');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const sortSelect = document.getElementById('sortAnnouncements');
+            const announcementsGrid = document.getElementById('announcementsGrid');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            const showingCount = document.getElementById('showing-count');
+            const totalCount = document.getElementById('total-count');
+            const countElements = {
+                all: document.getElementById('count-all'),
+                new: document.getElementById('count-new'),
+                result: document.getElementById('count-result'),
+                announcement: document.getElementById('count-announcement')
+            };
+
+            let currentFilter = 'all';
+            let currentSearch = '';
+            let currentSort = 'newest';
+
+            // Update twinkling status based on age
+            function updateTwinklingStatus() {
+                const now = Math.floor(Date.now() / 1000);
+                const oneWeekInSeconds = 7 * 24 * 60 * 60;
+
+                announcements.forEach(card => {
+                    const createdTimestamp = parseInt(card.dataset.date);
+                    const isNew = (now - createdTimestamp) < oneWeekInSeconds;
+                    
+                    if (isNew) {
+                        card.classList.add('new-announcement');
+                        card.dataset.status = 'new';
+                    } else {
+                        card.classList.remove('new-announcement');
+                        card.dataset.status = 'old';
+                    }
+                });
+
+                updateCounts();
+            }
+
+            // Update counts
+            function updateCounts() {
+                const counts = {
+                    all: announcements.length,
+                    new: 0,
+                    result: 0,
+                    announcement: 0
+                };
+
+                announcements.forEach(ann => {
+                    const type = ann.dataset.type;
+                    const status = ann.dataset.status;
+
+                    if (status === 'new') counts.new++;
+                    if (type === 'result') counts.result++;
+                    if (type === 'announcement') counts.announcement++;
+                });
+
+                for (const [type, count] of Object.entries(counts)) {
+                    if (countElements[type]) {
+                        countElements[type].textContent = count;
+                    }
+                }
+
+                totalCount.textContent = announcements.length;
+            }
+
+            // Filter announcements
+            function filterAnnouncements() {
+                let visibleCount = 0;
+
+                announcements.forEach(ann => {
+                    const type = ann.dataset.type;
+                    const status = ann.dataset.status;
+                    const title = ann.dataset.title;
+                    const content = ann.querySelector('.announcement-message').textContent.toLowerCase();
+
+                    let matchesFilter = false;
+                    let matchesSearch = true;
+
+                    // Apply filter
+                    switch(currentFilter) {
+                        case 'all':
+                            matchesFilter = true;
+                            break;
+                        case 'new':
+                            matchesFilter = status === 'new';
+                            break;
+                        case 'result':
+                            matchesFilter = type === 'result';
+                            break;
+                        case 'announcement':
+                            matchesFilter = type === 'announcement';
+                            break;
+                    }
+
+                    // Apply search
+                    if (currentSearch) {
+                        const searchLower = currentSearch.toLowerCase();
+                        matchesSearch = title.includes(searchLower) || 
+                                       content.includes(searchLower) ||
+                                       ann.querySelector('.announcement-title').textContent.toLowerCase().includes(searchLower);
+                    }
+
+                    // Show/hide
+                    if (matchesFilter && matchesSearch) {
+                        ann.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        ann.style.display = 'none';
+                    }
+                });
+
+                showingCount.textContent = visibleCount;
+
+                if (visibleCount === 0) {
+                    noResultsMessage.style.display = 'block';
+                    announcementsGrid.style.display = 'none';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                    announcementsGrid.style.display = 'grid';
+                    sortAnnouncements();
+                }
+            }
+
+            // Sort announcements
+            function sortAnnouncements() {
+                const container = document.getElementById('announcementsGrid');
+                const cards = Array.from(container.querySelectorAll('.announcement-card[style*="display: flex"]'));
+
+                cards.sort((a, b) => {
+                    const aTitle = a.querySelector('.announcement-title').textContent.toLowerCase();
+                    const bTitle = b.querySelector('.announcement-title').textContent.toLowerCase();
+                    const aDate = parseInt(a.dataset.date);
+                    const bDate = parseInt(b.dataset.date);
+                    const aPriority = a.dataset.priority === 'high' ? 1 : 0;
+                    const bPriority = b.dataset.priority === 'high' ? 1 : 0;
+                    const aStatus = a.dataset.status === 'new' ? 1 : 0;
+                    const bStatus = b.dataset.status === 'new' ? 1 : 0;
+
+                    switch (currentSort) {
+                        case 'newest':
+                            return bDate - aDate;
+                        case 'oldest':
+                            return aDate - bDate;
+                        case 'title':
+                            return aTitle.localeCompare(bTitle);
+                        case 'priority':
+                            if (bPriority !== aPriority) return bPriority - aPriority;
+                            return bDate - aDate;
+                        case 'new-status':
+                            if (bStatus !== aStatus) return bStatus - aStatus;
+                            return bDate - aDate;
+                        default:
+                            return bDate - aDate;
+                    }
+                });
+
+                cards.forEach(card => container.appendChild(card));
+            }
+
+            // Event Listeners
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.trim();
+                filterAnnouncements();
+            });
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    filterAnnouncements();
+                });
+            });
+
+            sortSelect.addEventListener('change', function() {
+                currentSort = this.value;
+                sortAnnouncements();
+            });
+
+            // Keyboard shortcut for search
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
+
+            // Initialize
+            updateTwinklingStatus();
+            updateCounts();
+            filterAnnouncements();
+
+            // Auto-update twinkling status every hour
+            setInterval(updateTwinklingStatus, 60 * 60 * 1000);
+
+            // Download tracking
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const card = this.closest('.announcement-card');
+                    console.log(`Downloading announcement: ${card.dataset.id}`);
+                    // Add analytics tracking here
+                });
+            });
+            
+            // Fix any remaining overflow issues
+            function fixOverflowIssues() {
+                document.body.style.overflowX = 'hidden';
+                document.documentElement.style.overflowX = 'hidden';
+                
+                // Force all elements to stay within bounds
+                document.querySelectorAll('*').forEach(el => {
+                    el.style.maxWidth = '100%';
+                });
+            }
+            
+            // Run overflow fix
+            fixOverflowIssues();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Print functionality
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+        
+        // Ensure page fits on resize
+        window.addEventListener('resize', function() {
+            document.body.style.overflowX = 'hidden';
+            document.documentElement.style.overflowX = 'hidden';
+        });
+    </script>
+</body>
+</html>

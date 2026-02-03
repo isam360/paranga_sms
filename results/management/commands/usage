@@ -1,0 +1,4 @@
+maelekezo elekezi
+TO EXPORT DATA : python manage.py export_results --output=backup_results.json
+
+TO IMPORT DATA : python manage.py import_results --input=backup_results.json

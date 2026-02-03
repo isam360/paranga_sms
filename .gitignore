@@ -1,0 +1,62 @@
+# --------------------------------------------------------------
+# Django / Python
+# --------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# --------------------------------------------------------------
+# Databases
+# --------------------------------------------------------------
+# Ignore SQLite database (used locally)
+db.sqlite3
+*.sqlite3
+*.db
+
+# --------------------------------------------------------------
+# Django specific
+# --------------------------------------------------------------
+# Static and media files (can be generated)
+staticfiles/
+static/
+media/
+
+# Local settings and secrets
+*.env
+.env.*
+.envrc
+config/settings/local.py
+
+# --------------------------------------------------------------
+# IDE / Editor files
+# --------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+.DS_Store
+Thumbs.db
+
+
+
+# --------------------------------------------------------------
+# Misc
+# --------------------------------------------------------------
+coverage/
+htmlcov/

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuGate | OAuth🚀 - Secure Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --success: #10b981;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        header.scrolled {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo span {
+            color: var(--secondary);
+        }
+        .logo i {
+            font-size: 20px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            animation: pulse 8s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0.8; }
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+        .hero-btns {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: white;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: var(--light);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.1);
+        }
+        .feature-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            color: var(--gray);
+        }
+        /* CTA */
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://assets.mugate.com/patterns/dots.svg') center/cover;
+            opacity: 0.1;
+        }
+        .cta .container {
+            position: relative;
+            z-index: 1;
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .cta .btn {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 12px 30px;
+        }
+        .cta .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+        .footer-col ul {
+            list-style: none;
+        }
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+        .footer-col ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-col ul li a:hover {
+            color: white;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 0;
+                gap: 30px;
+                transition: all 0.5s ease;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero-btns {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header id="header">
+    <div class="container">
+        <nav>
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Mu</span>Gate | OAuth<span class="rocket">🚀</span>
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#why" class="nav-link">Why MuGate?</a>
+                <div class="auth-buttons">
+                    {% comment %} <a href="{% url 'OAuthForm:login' %}" class="btn btn-outline">Login</a> {% endcomment %}
+                    <a href="{% url 'OAuthForm:register' %}" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<!-- Scroll Behavior Fix -->
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    section {
+        scroll-margin-top: 80px; /* Offset for fixed header */
+    }
+
+    /* Header Styles */
+    header {
+        background: white;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    header.scrolled {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .logo i {
+        color: #4361ee;
+        font-size: 1.2em;
+    }
+
+    .logo span {
+        color: #4361ee;
+    }
+
+    .rocket {
+        margin-left: 4px;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .nav-link {
+        color: #4b5563;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        padding: 8px 0;
+        position: relative;
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .auth-buttons {
+        display: flex;
+        gap: 12px;
+        margin-left: 20px;
+    }
+
+    .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #4b5563;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        .nav-links {
+            position: fixed;
+            top: 70px;
+            left: -100%;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: white;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 25px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links.active {
+            left: 0;
+        }
+
+        .auth-buttons {
+            flex-direction: column;
+            width: 100%;
+            max-width: 280px;
+            margin: 20px 0 0;
+        }
+
+        .nav-link {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<!-- JS Script -->
+<script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    // Toggle mobile menu
+    menuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        menuBtn.innerHTML = navLinks.classList.contains('active')
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    });
+
+    // Close mobile menu when nav link is clicked
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        });
+    });
+
+    // Scroll header effect
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 20) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>MuGate | OAuth🚀 Package</h1>
+        <p>
+            Secure, seamless, and scalable authentication for your web and mobile applications.
+            MuGate is an OTP & token-based authentication system built with Django and Django REST Framework (DRF),
+            created by <strong>Is-haka Muhunzi</strong> to help developers simplify user management, improve security, and integrate auth in minutes—not days.
+        </p>
+
+        <div class="hero-btns">
+            <a href="#features" class="btn btn-secondary">
+                <i class="fas fa-code"></i> See How It Works
+            </a>
+            <a href="https://isihaka-portofolio.vercel.app/" target="_blank" class="btn btn-secondary">
+                <i class="fas fa-briefcase"></i> View My Other Projects
+            </a>
+            <a href="https://github.com/isihaka360?tab=repositories" target="_blank" class="btn btn-secondary">
+                <i class="fab fa-github"></i> View on GitHub
+            </a>
+        </div>
+
+        <div class="hero-meta">
+            <span><i class="fas fa-lock"></i> High-level security with OTP & token auth</span>
+            <span><i class="fas fa-chart-line"></i> Scales with your project</span>
+            <span><i class="fas fa-heart"></i> Built & maintained by Is-haka Muhunzi</span>
+        </div>
+    </div>
+</section>
+
+
+<!-- Features -->
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Exactly What Developers Need</h2>
+            <p>No over-engineering - just the auth features you'll actually use.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>OTP That Just Works</h3>
+                <p>Simple SMS/email OTP implementation without complex dependencies. Perfect for startups and indie projects.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Stateless Tokens</h3>
+                <p>JWT and DRF token auth ready for your APIs. Includes refresh tokens and easy revocation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>DIY-Friendly</h3>
+                <p>Clear documentation and modular design. Extend or customize without digging through layers of abstraction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose MuGate -->
+<section class="cta" id="why">
+    <div class="container">
+        <h2>Tired of Auth Headaches?</h2>
+        <p>"I built MuGate because existing solutions were either too complex or too expensive for indie developers. Now you get enterprise-grade auth without the enterprise BS."</p>
+        <div class="cta-buttons">
+            <a href="{% url 'OAuthForm:register' %}" class="btn btn-primary">
+                <i class="fas fa-play-circle"></i> Try Live Demo
+            </a>
+            {% comment %} <a href="https://github.com/yourusername/mugate" class="btn btn-secondary" target="_blank">
+                <i class="fab fa-github"></i> View on GitHub
+            </a> {% endcomment %}
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Button Styles */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        gap: 8px;
+    }
+    
+    .btn-primary {
+        background-color: #4361ee;
+        color: white;
+        border: 2px solid #4361ee;
+    }
+    
+    .btn-primary:hover {
+        background-color: #3a56d4;
+        border-color: #3a56d4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+    }
+    
+    .btn-secondary {
+        background-color: transparent;
+        color: #4361ee;
+        border: 2px solid #4361ee;
+    }
+    
+    .btn-secondary:hover {
+        background-color: rgba(67, 97, 238, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    /* Hero Buttons Container */
+    .hero-btns {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    /* CTA Buttons Container */
+    .cta-buttons {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Hero Meta Tags */
+    .hero-meta {
+        margin-top: 30px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .hero-meta span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+    
+    .hero-meta i {
+        color: #4361ee;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .hero-btns, .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn {
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+        }
+    }
+</style>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>MuGate | OAuth🚀</h3>
+                <p>A secure authentication system developed by Is-haka Muhunzi.</p>
+                <div class="social-links">
+                    <a href="https://github.com/isihaka360" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/isihaka-abdallah" target="_blank" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    
+                    <a href="mailto:isihakaabdallah25@email.com" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#why">Why MuGate?</a></li>
+                    <li><a href="{% url 'OAuthForm:login' %}">Live Demo</a></li>
+                </ul>
+            </div>
+            {% comment %} <div class="footer-col">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="/docs">Documentation</a></li>
+                    <li><a href="https://github.com/yourusername/mugate" target="_blank">GitHub Repo</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                </ul>
+            </div> {% endcomment %}
+<div class="footer-col">
+    <h3>Support</h3>
+    <ul>
+        <li>
+            <a href="https://wa.me/255612358408" target="_blank" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i> WhatsApp Support
+            </a>
+        </li>
+        <li>    <a href="https://isihaka-portofolio.vercel.app/" target="_blank" title="Is-haka's Portfolio">
+        <i class="fas fa-globe"></i> Is-haka's Portfolio
+    </a></li>
+
+    </ul>
+</div>
+
+        </div>
+      <div class="footer-bottom">
+    <p>&copy; <span id="year"></span> MuGate | OAuth🚀 by Is-haka Muhunzi</p>
+</div>
+
+    </div>
+</footer>
+
+<script>
+    // Auto-update copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+
+        // Animation on Scroll (You can add more with AOS library if needed)
+        const featureCards = document.querySelectorAll('.feature-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

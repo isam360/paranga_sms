@@ -1,0 +1,262 @@
+{% load static %}
+
+<!-- ========== section start ========== -->
+<section class="section">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card-style settings-card-1 mb-30">
+
+          <div class="profile-info">
+            <div class="d-flex align-items-center mb-30">
+              <!-- Profile Image Section -->
+              <div class="profile-image">
+                <img id="profile-picture" src="{% static 'assets/images/profile/avatar.jpeg' %}" alt="Profile Picture" />
+                <div class="update-image">
+                  <input type="file" name="profile_picture" id="profile-picture-upload" />
+                  <label for="profile_picture"><i class="lni lni-cloud-upload"></i></label>
+                </div>
+              </div>
+
+              <!-- Profile Info Section -->
+              <div class="profile-meta ms-4">
+                <!-- Full Name (First Name + Last Name) -->
+                <h5 id="profile-full-name" class="text-bold text-dark mb-10">Loading...</h5>
+
+                <!-- Bio (you can display part of the user's bio) -->
+                <p id="profile-bio" class="text-sm text-gray">Loading...</p>
+              </div>
+            </div>
+
+            <!-- First Name and Last Name (Side by Side) -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="input-style-1">
+                  <label>First Name</label>
+                  <input type="text" id="profile-first-name" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="input-style-1">
+                  <label>Last Name</label>
+                  <input type="text" id="profile-last-name" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="input-style-1 mb-3">
+              <label>Email</label>
+              <input type="email" id="profile-email" class="form-control" disabled />
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="input-style-1 mb-3">
+              <label>Phone Number</label>
+              <input type="text" id="profile-whatsapp" class="form-control" placeholder="e.g +225612358408" />
+            </div>
+
+            <!-- Bio Field -->
+            <div class="input-style-1 mb-3">
+              <label>Bio</label>
+              <textarea rows="4" id="profile-bio-input" class="form-control" placeholder="bio details here.."></textarea>
+            </div>
+
+            <!-- Update Profile Button after Bio Field -->
+            <div class="col-12">
+              <button type="button" class="login-btn" id="updateProfileButton">
+                Update Profile
+                <div class="loader" id="loader" style="display:none;"></div> <!-- Loader added -->
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== section end ========== -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const route = "https://web-mugate-api.onrender.com"; // Your API route
+    const route1 = "https://web-mugate-api.onrender.com";
+    const accessToken = localStorage.getItem('access_token'); // Retrieve token from localStorage
+
+    if (!accessToken) {
+      window.location.href = `${route1}/`; // Redirect to login if no token
+      return;
+    }
+
+    // Fetch user profile
+    fetch(`${route}/api/v1/profile/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Populate profile information
+      document.getElementById('profile-full-name').textContent = `${data.first_name} ${data.last_name}`;
+      document.getElementById('profile-bio').textContent = data.bio || 'No bio available';
+      document.getElementById('profile-first-name').value = data.first_name;
+      document.getElementById('profile-last-name').value = data.last_name;
+      document.getElementById('profile-email').value = data.email;
+      document.getElementById('profile-whatsapp').value = data.whatsapp_number;
+      document.getElementById('profile-bio-input').value = data.bio;
+
+      if (data.profile_picture) {
+        document.getElementById('profile-picture').src = data.profile_picture;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching user profile:', error);
+      window.location.href = `${route}/login/`; // Redirect to login if error occurs
+    });
+
+    // Handle profile update
+    const updateProfileButton = document.getElementById('updateProfileButton');
+    const loader = document.getElementById('loader');
+
+    updateProfileButton.addEventListener('click', async function (e) {
+      e.preventDefault(); // Prevent form from submitting normally
+
+      const updatedProfile = {
+        first_name: document.getElementById('profile-first-name').value,
+        last_name: document.getElementById('profile-last-name').value,
+        whatsapp_number: document.getElementById('profile-whatsapp').value,
+        bio: document.getElementById('profile-bio-input').value,
+      };
+
+      // Check if profile picture is updated
+      const profilePicture = document.getElementById('profile-picture-upload').files[0];
+      const formData = new FormData();
+
+      // Append updated data to FormData object
+      formData.append('first_name', updatedProfile.first_name);
+      formData.append('last_name', updatedProfile.last_name);
+      formData.append('whatsapp_number', updatedProfile.whatsapp_number);
+      formData.append('bio', updatedProfile.bio);
+
+      if (profilePicture) {
+        formData.append('profile_picture', profilePicture);
+      }
+
+      // Show loader during the update process
+      loader.style.display = 'inline-block';
+      updateProfileButton.disabled = true; // Disable button to prevent multiple submissions
+
+      try {
+        const response = await fetch(`${route}/api/v1/profile/update/`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: formData,
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Reload the page after successful update
+          window.location.reload();
+        } else {
+          console.error('An error occurred while updating your profile. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      } finally {
+        // Hide loader and re-enable the button
+        loader.style.display = 'none';
+        updateProfileButton.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Profile Image Styling */
+  .profile-image img {
+    max-width: 120px;
+    border-radius: 50%;
+  }
+
+  .update-image input[type="file"] {
+    display: none;
+  }
+
+  .update-image label {
+    cursor: pointer;
+    font-size: 18px;
+    color: #007bff;
+  }
+
+  /* Input Style */
+  .input-style-1 {
+    margin-bottom: 15px;
+  }
+
+  .input-style-1 input,
+  .input-style-1 textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .input-style-1 label {
+    font-weight: bold;
+  }
+
+  /* Layout for First Name and Last Name Side by Side */
+  .row .col-md-6 {
+    padding: 0 15px;
+  }
+
+  /* Update Button Styling */
+  .login-btn {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: rgb(235, 239, 243);
+    font-weight: bold;
+    color: gray;
+    border-radius: 5px;
+    position: relative;
+    border: none;
+  }
+
+  .login-btn:disabled {
+    background-color: rgb(235, 239, 243);
+  }
+
+  .login-btn:hover {
+    background-color: #e2e6ea;
+  }
+
+  /* Loader Styling */
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1.5s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>

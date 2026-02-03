@@ -1,0 +1,133 @@
+{% load static %}
+
+<!-- Sidebar Wrapper -->
+<aside class="sidebar-nav-wrapper" id="sidebar">
+  <div class="navbar-logo">
+    <a href="{% url 'OAuthForm:index' %}">
+      <img src="{% static 'assets/images/logo/MuGate.jpg' %}" alt="MuGate Logo" class="logo-circle" />
+    </a>
+  </div>
+
+  <!-- Toggle button for mobile -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Sidebar Menu -->
+  <ul class="sidebar-menu">
+    <li class="menu-heading">Core</li>
+    <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
+    <li><a href="#"><i class="fas fa-users-cog"></i> Manage Users</a></li>
+
+
+    <li class="menu-heading">External</li>
+    <li><a href="https://wa.me/255612358408" target="_blank"><i class="fab fa-whatsapp"></i> Support</a></li>
+    <li><a href="https://isihaka-portofolio.vercel.app/" target="_blank"><i class="fas fa-user-circle"></i> Portfolio</a></li>
+    <li><a href="https://github.com/isihaka360?tab=repositories" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+  </ul>
+</aside>
+<style>
+  .sidebar-nav-wrapper {
+  width: 240px;
+  background: #fff;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding-top: 20px;
+  border-right: 1px solid #eee;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+}
+
+.logo-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #4361ee;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.sidebar-menu a i {
+  margin-right: 10px;
+  color: #4361ee;
+  min-width: 20px;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background: #f3f4f6;
+  border-left: 4px solid #4361ee;
+}
+
+.menu-heading {
+  padding: 10px 20px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 15px;
+}
+
+/* Mobile Styles */
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  position: absolute;
+  top: 15px;
+  right: -40px;
+  color: #374151;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar-nav-wrapper {
+    left: -240px;
+  }
+
+  .sidebar-nav-wrapper.active {
+    left: 0;
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
+</style>
+
+  <script>
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  const sidebar = document.getElementById("sidebar");
+
+  sidebarToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+  });
+</script>
+

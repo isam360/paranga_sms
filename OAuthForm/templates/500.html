@@ -1,0 +1,163 @@
+{% extends "index.html" %}
+{% load static %}
+{% block page_title %}Internal Server Error | Mutech BookStore{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-card">
+        <div class="icon-container">
+            <!-- Updated placeholder size to 250x200px to match 404 error image size -->
+            <img src="https://via.placeholder.com/250x200?text=500" alt="500 Error Icon" class="error-icon">
+        </div>
+        <h1 class="error-title">Oops! Something Went Wrong</h1>
+        <p class="error-message">
+            We encountered an issue while processing your request. Please try again later.
+        </p>
+        <a href="/" class="retry-button">Go Back to Home</a>
+    </div>
+</div>
+
+<style>
+    /* General Styles */
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #f9fafb;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 0;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    /* Error container styles */
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* Error card styles */
+    .error-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 420px;
+        width: 100%;
+        transition: transform 0.3s ease;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        0% { transform: translateY(20px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .error-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .error-card a{
+        color:white;
+    } 
+
+    /* Icon container */
+    .icon-container {
+        margin-bottom: 20px;
+    }
+
+    .error-icon {
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
+
+    /* Typography */
+    .error-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+        animation: fadeInTitle 0.8s ease-out;
+    }
+
+    @keyframes fadeInTitle {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .error-message {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.6;
+        animation: fadeInText 1s ease-out;
+    }
+
+    @keyframes fadeInText {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    /* Button styles */
+    .retry-button {
+        display: inline-block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background-color: #4a90e2;
+        color: #ffffff;
+        padding: 12px 35px;
+        border-radius: 6px;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        animation: fadeInButton 1.2s ease-out;
+    }
+
+    @keyframes fadeInButton {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .retry-button:hover {
+        background-color: #357ab7;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(53, 122, 183, 0.3);
+    }
+
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+        .error-card {
+            padding: 20px;
+        }
+
+        .error-title {
+            font-size: 1.6rem;
+        }
+
+        .error-message {
+            font-size: 1rem;
+        }
+
+        .retry-button {
+            padding: 10px 25px;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+{% endblock %}

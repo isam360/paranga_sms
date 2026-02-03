@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+  <div style="text-align:center; margin-bottom:20px;">
+      <img src="{% static 'images/school_logo.jpg' %}" alt="Paranga Secondary School Logo" style="max-height:100px;">
+  </div>
+
+  <h2 style="text-align:center;">Paranga Secondary School</h2>
+  <p style="text-align:center; color:#555;">Karibu kwenye mfumo wa Paranga Sec School</p>
+
+  <!-- Login form -->
+  <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+  </form>
+
+  <div style="text-align:center; margin-top:10px;">
+      <a href="{% url 'password_reset' %}">Forgot your password?</a>
+  </div>
+  
+{% endblock %}

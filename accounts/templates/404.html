@@ -1,0 +1,110 @@
+{% extends "index.html" %}
+{% load static %}
+{% block page_title %}Page Not Found | Paranga Secondary School{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-card">
+        <div class="icon-container">
+            <img src="{% static 'images/school_logo.jpg' %}" alt="Paranga Secondary School Logo" class="school-logo">
+        </div>
+
+        <h1 class="error-title">404 - Page Not Found</h1>
+        <p class="error-message">
+            The page you’re looking for doesn’t exist or has been moved.<br>
+            If you typed the URL manually, please double-check the address.
+        </p>
+
+        <a href="admin/" class="retry-button">Back to Home</a>
+    </div>
+</div>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #2a5298, #1e3c72);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 0 15px;
+        animation: fadeIn 1s ease-in-out;
+        text-align: center;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .error-container {
+        max-width: 450px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 40px 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        backdrop-filter: blur(12px);
+        animation: slideUp 0.5s ease-out;
+        margin: auto;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .school-logo {
+        width: 120px;
+        border-radius: 50%;
+        margin-bottom: 25px;
+        border: 3px solid #fff;
+        box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        background-color: #fff;
+        padding: 5px;
+    }
+
+    .error-title {
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .error-message {
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+        line-height: 1.5;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .retry-button {
+        display: inline-block;
+        background-color: #ffcc00;
+        color: #1e3c72;
+        font-weight: 700;
+        font-size: 1.1rem;
+        padding: 14px 40px;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow: 0 6px 15px rgba(255, 204, 0, 0.6);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .retry-button:hover {
+        background-color: #e6b800;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(230, 184, 0, 0.8);
+    }
+
+    @media (max-width: 480px) {
+        .error-container { padding: 30px 20px; }
+        .error-title { font-size: 1.8rem; }
+        .error-message { font-size: 1rem; }
+        .retry-button { padding: 12px 30px; font-size: 1rem; }
+    }
+</style>
+{% endblock %}

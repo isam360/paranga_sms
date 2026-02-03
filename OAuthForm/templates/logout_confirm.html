@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logout | MuGate</title>
+  <link rel="shortcut icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon" />
+
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --secondary: #6c757d;
+      --light: #f8f9fa;
+      --white: #fff;
+      --radius: 12px;
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: #212529;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .logout-container {
+      background-color: var(--white);
+      padding: 40px 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logout-img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      border: 4px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+    }
+
+    .logout-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .logout-msg {
+      font-size: 1rem;
+      color: var(--secondary);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      max-width: 230px;
+      margin: 10px auto;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0b5ed7;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background-color: var(--white);
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: #eaf1ff;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+      .logout-container {
+        padding: 30px 20px;
+      }
+
+      .logout-title {
+        font-size: 1.5rem;
+      }
+
+      .logout-msg {
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logout-container">
+    <img src="{% static 'assets/images/log1.jpeg' %}" alt="Logout Image" class="logout-img" />
+    {% comment %} <h2 class="logout-title">You’ve been logged out</h2> {% endcomment %}
+    <p class="logout-msg">
+      Thank you for using <strong>MuGate | OAuth 🚀</strong>. We hope your session was productive.<br />
+      Come back anytime to continue building something amazing.
+    </p>
+    <a href="{% url 'OAuthForm:login' %}" class="btn btn-primary">Log In Again</a>
+    <a href="/" class="btn btn-outline">Return to Homepage</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block page_title %} Home | Mutech{% endblock %}
+
+{% block content %}
+<!-- ======== Preloader =========== -->
+<div id="preloader">
+  <div class="spinner"></div>
+</div>
+<!-- ======== Preloader =========== -->
+
+<!-- ======== sidebar-nav start =========== -->
+{% include "admin/include/aside.html" %}
+
+<div class="overlay"></div>
+<!-- ======== sidebar-nav end =========== -->
+
+<!-- ======== main-wrapper start =========== -->
+<main class="main-wrapper">
+
+<!-- ======== Header =========== -->
+  {% include "admin/include/header.html" %}
+
+  <!-- ======== Main Content =========== -->
+  {% include "admin/include/dashboard.html" %}
+  <!-- ======== End Main Content =========== -->
+
+
+  {% include "includes/footer.html" %}
+  
+    <!-- end container -->
+{% endblock %}
+

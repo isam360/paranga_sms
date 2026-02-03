@@ -1,0 +1,214 @@
+<!-- ========== header start ========== -->
+{% load static %}
+<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-6">
+                <div class="header-left d-flex align-items-center">
+                    <div class="menu-toggle-btn mr-15">
+                        <button id="menu-toggle" class="main-btn primary-btn btn-hover">
+                            <i class="lni lni-chevron-left me-2"></i> Menu
+                        </button>
+                    </div>
+                    <div class="header-search d-none d-md-flex">
+                        <form action="#">
+                            <input type="text" placeholder="Search..." />
+                            <button><i class="lni lni-search-alt"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-7 col-6">
+                <div class="header-right">
+                    <!-- notification start -->
+                    <div class="notification-box ml-15 d-none d-md-flex">
+                        <button class="dropdown-toggle" type="button" id="notification" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 20.1667C9.88317 20.1667 8.88718 19.63 8.23901 18.7917H13.761C13.113 19.63 12.1169 20.1667 11 20.1667Z" fill="" />
+                                <path d="M10.1157 2.74999C10.1157 2.24374 10.5117 1.83333 11 1.83333C11.4883 1.83333 11.8842 2.24374 11.8842 2.74999V2.82604C14.3932 3.26245 16.3051 5.52474 16.3051 8.24999V14.287C16.3051 14.5301 16.3982 14.7633 16.564 14.9352L18.2029 16.6342C18.4814 16.9229 18.2842 17.4167 17.8903 17.4167H4.10961C3.71574 17.4167 3.5185 16.9229 3.797 16.6342L5.43589 14.9352C5.6017 14.7633 5.69485 14.5301 5.69485 14.287V8.24999C5.69485 5.52474 7.60672 3.26245 10.1157 2.82604V2.74999Z" fill="" />
+                            </svg>
+                            <span></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notification">
+                            {% if notifications %}
+                                {% for notification in notifications %}
+                                    <li>
+                                        <a href="{{ notification.url }}">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-box">
+                                                    <i class="lni lni-notification"></i>
+                                                </div>
+                                                <div class="notification-content">
+                                                    <p>{{ notification.message }}</p>
+                                                    <span class="text-muted">{{ notification.timestamp|date:"Y-m-d H:i" }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No new notifications</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- notification end -->
+
+                    <!-- profile start -->
+                    <div class="profile-box ml-15">
+                        <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="profile-info">
+                                <div class="info">
+                                    <div class="image">
+                                        <img id="profile-image" src="" alt="Profile Image" />
+                                    </div>
+                                    <div>
+                                        <h6 id="profile-name" class="fw-500">Loading...</h6>
+                                        <p id="profile-role">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{% url 'OAuthForm:profile' %}">
+                                    <i class="lni lni-user"></i> View Profile
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:void(0);" id="logoutBtn">
+                                    <i class="lni lni-exit"></i> Sign Out
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:void(0);" id="deleteAccountBtn">
+                                    <i class="lni lni-trash"></i> Delete Account
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- profile end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ========== header end ========== -->
+
+<!-- Bootstrap Modal for Account Deletion Confirmation -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to permanently delete your account? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const route = "https://web-mugate-api.onrender.com"; // Your API route
+        const route1 = "https://web-mugate-api.onrender.com"; // Redirect to another route after logout
+        const accessToken = localStorage.getItem('access_token'); // Retrieve token from localStorage
+
+        if (!accessToken) {
+            window.location.href = `${route1}/`; // Redirect to login if no token
+            return;
+        }
+
+        // Fetch user profile
+        fetch(`${route}/api/v1/profile/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Populate profile information in the header
+            document.getElementById('profile-name').textContent = `${data.first_name} ${data.last_name}`;
+            document.getElementById('profile-role').textContent = data.role;
+            // Check if the profile image is available, otherwise use the default image
+            document.getElementById('profile-image').src = data.profile_picture || "{% static 'assets/images/profile/avatar.jpeg' %}";
+        })
+        .catch(error => {
+            console.error('Error fetching user profile:', error);
+            window.location.href = `${route1}/`; // Redirect to login if error occurs
+        });
+
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', function () {
+            fetch(`${route}/api/v1/logout/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Logout successful');
+                    localStorage.removeItem('access_token');
+                    window.location.href = `${route1}/account/logout/`; // Redirect to login after logout
+                } else {
+                    console.log('Error logging out');
+                    alert('Error logging out. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                alert('An error occurred during logout. Please try again.');
+            });
+        });
+
+        // Show Modal for Account Deletion
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        const deleteAccountModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+
+        deleteAccountBtn.addEventListener('click', function () {
+            // Show the modal when the delete account button is clicked
+            deleteAccountModal.show();
+        });
+
+        // Confirm Delete Account
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        confirmDeleteBtn.addEventListener('click', function () {
+            fetch(`${route}/api/v1/delete-account/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Account deleted successfully');
+                    localStorage.removeItem('access_token');
+                    window.location.href = `${route1}/`; // Redirect to a page confirming account deletion
+                } else {
+                    console.log('Error deleting account');
+                    alert('Error deleting account. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Delete account error:', error);
+                alert('An error occurred during account deletion. Please try again.');
+            });
+            // Hide the modal after the action
+            deleteAccountModal.hide();
+        });
+    });
+</script>

@@ -1,0 +1,164 @@
+from django.core.management.base import BaseCommand
+from teachers.models import Teacher, Subject, SchoolClass
+from django.utils.dateparse import parse_datetime
+
+class Command(BaseCommand):
+    help = 'Create all teachers from predefined data, including missing subjects and classes'
+
+    def handle(self, *args, **kwargs):
+        teacher_data = [
+            {
+                "full_name": "PENDO J.SIJILA",
+                "gender": "F",
+                "phone": "0675438191",
+                "email": "pendojoseph24@gmail.com",
+                "subject_specialization": ["Kiswahili"],
+                "assigned_class": None,
+                "role": "head",
+                "created_at": "2025-10-26 13:58:06"
+            },
+            {
+                "full_name": "PASCOLINA A. PETRO",
+                "gender": "F",
+                "phone": "0612130361",
+                "email": "pascolinapetrol@gmail.com",
+                "subject_specialization": ["Civics", "History"],
+                "assigned_class": None,
+                "role": "normal",
+                "created_at": "2025-10-26 13:58:08"
+            },
+            {
+                "full_name": "IS-HAKA A.MUHUNZI",
+                "gender": "M",
+                "phone": "0610117824",
+                "email": "isihakaabdallah25@gmail.com",
+                "subject_specialization": ["Biology", "Physics"],
+                "assigned_class": None,
+                "role": "assistant_academic",
+                "created_at": "2025-10-26 13:58:10"
+            },
+            {
+                "full_name": "EVANS A. HAOUGA",
+                "gender": "M",
+                "phone": "0764192141",
+                "email": "haongaevans@gmail.com",
+                "subject_specialization": ["English Language"],
+                "assigned_class": "FORM III-A",
+                "role": "normal",
+                "created_at": "2025-11-05 21:04:17"
+            },
+            {
+                "full_name": "LATIFA B. IKAJI",
+                "gender": "F",
+                "phone": "0692433278",
+                "email": "latifaikaji41@gmail.com",
+                "subject_specialization": ["Biology", "Chemistry"],
+                "assigned_class": "FORM I-B",
+                "role": "discipline",
+                "created_at": "2025-10-26 13:58:28"
+            },
+            {
+                "full_name": "ABUBAKARI K.MWALIMU",
+                "gender": "M",
+                "phone": "0684567548",
+                "email": "kabiaabubakari@gmail.com",
+                "subject_specialization": ["Kiswahili"],
+                "assigned_class": None,
+                "role": "deputy",
+                "created_at": "2025-11-05 21:01:34"
+            },
+            {
+                "full_name": "SEBASTIA P. CALYSTY",
+                "gender": "F",
+                "phone": "0689910070",
+                "email": "calystysebastia@gmail.com",
+                "subject_specialization": ["Geography"],
+                "assigned_class": None,
+                "role": "accountant",
+                "created_at": "2025-11-05 21:06:44"
+            },
+            {
+                "full_name": "MARIA R. MREMA",
+                "gender": "F",
+                "phone": "0654134018",
+                "email": "jeisaraby@gmail.com",
+                "subject_specialization": ["Geography", "Biology"],
+                "assigned_class": "FORM I-A",
+                "role": "normal",
+                "created_at": "2025-11-05 20:58:50"
+            },
+            {
+                "full_name": "SAUDANI A. TARIMO",
+                "gender": "F",
+                "phone": "0769060062",
+                "email": "adinanisau@gmail.com",
+                "subject_specialization": ["BUSINESS STUDIES"],
+                "assigned_class": None,
+                "role": "normal",
+                "created_at": "2025-10-26 14:11:03"
+            },
+            {
+                "full_name": "RAMADHANI ABDILLAH",
+                "gender": "M",
+                "phone": "0714938310",
+                "email": "muyambega@gmail.com",
+                "subject_specialization": ["English Language"],
+                "assigned_class": None,
+                "role": "normal",
+                "created_at": "2025-10-26 13:58:32"
+            },
+            {
+                "full_name": "ALICE M. NDIMBO",
+                "gender": "F",
+                "phone": "0714960677",
+                "email": "ndimboalice140@gmail.com",
+                "subject_specialization": ["History"],
+                "assigned_class": None,
+                "role": "normal",
+                "created_at": "2025-10-26 13:58:24"
+            },
+            {
+                "full_name": "BAHATI T. BUSANUKA",
+                "gender": "M",
+                "phone": "0685775729",
+                "email": "busanuka1996@gmail.com",
+                "subject_specialization": ["Mathematics"],
+                "assigned_class": "FORM II-A",
+                "role": "academic",
+                "created_at": "2025-10-26 13:58:20"
+            }
+        ]
+
+        for data in teacher_data:
+            # Ensure class exists
+            assigned_class = None
+            if data["assigned_class"]:
+                assigned_class, _ = SchoolClass.objects.get_or_create(name=data["assigned_class"])
+
+            # Create or update teacher
+            teacher, created = Teacher.objects.update_or_create(
+                phone=data["phone"],  # phone as unique identifier
+                defaults={
+                    "full_name": data["full_name"],
+                    "gender": data["gender"],
+                    "role": data["role"],
+                    "assigned_class": assigned_class,
+                    "email": data.get("email", ""),
+                    "created_at": parse_datetime(data["created_at"])
+                }
+            )
+
+            # Ensure subjects exist and assign
+            subjects = []
+            for subject_name in data["subject_specialization"]:
+                subject, _ = Subject.objects.get_or_create(name=subject_name)
+                subjects.append(subject)
+            teacher.subject_specialization.set(subjects)
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"{'Created' if created else 'Updated'} teacher: {teacher.full_name}"
+                )
+            )
+
+        self.stdout.write(self.style.SUCCESS("🎉 All teachers have been successfully created!"))
