@@ -397,6 +397,18 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1  # Optional: link expires in 1 day
 # Email settings (for sending verification emails or other emails)
 # --------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'            
 # EMAIL_PORT = 587
