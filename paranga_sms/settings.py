@@ -14,28 +14,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------
 # Security
-# --------------------------------------------------------------
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
+# --------------------------------------------------
+SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "parangasec.up.railway.app",
-    "parangasec.online",
-    "www.parangasec.online",
-]
+DEBUG = config("DEBUG", cast=bool, default=False)
 
-# CSRF / CORS
-CSRF_TRUSTED_ORIGINS = [
-    "https://parangasec.up.railway.app",
-    "https://parangasec.online",
-    "https://www.parangasec.online",
-    "http://localhost:8000",      # only for local dev
-    "http://127.0.0.1:8000",      # only for local dev
-]
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    cast=Csv(),
+    default="localhost,127.0.0.1"
+)
 
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    cast=Csv(),
+    default=""
+)
 
+SITE_URL = config("SITE_URL", default="http://localhost:8000")
 
 # --------------------------------------------------------------
 # Security Settings for Railway Deployment (HTTPS, CSRF, Cookies)
