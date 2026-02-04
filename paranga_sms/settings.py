@@ -19,7 +19,7 @@ DEBUG = config("DEBUG", cast=bool, default=True)
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
     cast=Csv(),
-    default="localhost,127.0.0.1,parangasec.up.railway.app"
+    default="localhost,127.0.0.1,parangasec.up.railway.app,parangasec.online,www.parangasec.online"
 )
 
 CSRF_TRUSTED_ORIGINS = config(
