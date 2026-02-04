@@ -192,19 +192,14 @@ TEMPLATES = [
 
 
 
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://postgres:BBUPHWcPiGkCioVCqLBVBZJYtaJurmhJ@maglev.proxy.rlwy.net:18652/railway'
-    
-)
-
 DATABASES = {
-    'default': dj_database_url.parse(
-        DATABASE_URL,
+    "default": dj_database_url.parse(
+        config("DATABASE_URL", default="postgresql://postgres:BBUPHWcPiGkCioVCqLBVBZJYtaJurmhJ@maglev.proxy.rlwy.net:18652/railway"),
         conn_max_age=600,
-        ssl_require=True  # Railway needs SSL
+        ssl_require=True
     )
 }
+
 
 # --------------------------------------------------------------
 # Authentication
