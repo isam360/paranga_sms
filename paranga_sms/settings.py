@@ -343,14 +343,22 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 # --------------------------------------------------------------
 # Email settings (SendGrid)
 # --------------------------------------------------------------
-EMAIL_BACKEND = config(
-    "EMAIL_BACKEND",
-    default="paranga_sms.sendgrid_backend.SendGridAPIEmailBackend"
-)
-DEFAULT_FROM_EMAIL = config(
-    "DEFAULT_FROM_EMAIL",
-    default="Paranga Secondary <no-reply@parangasec.online>"
-)
+# EMAIL_BACKEND = config(
+#     "EMAIL_BACKEND",
+#     default="paranga_sms.sendgrid_backend.SendGridAPIEmailBackend"
+# )
+# DEFAULT_FROM_EMAIL = config(
+#     "DEFAULT_FROM_EMAIL",
+#     default="Paranga Secondary <no-reply@parangasec.online>"
+# )
 
-DOMAIN = config("DOMAIN", default="parangasec.online")
-USE_HTTPS = config("USE_HTTPS", cast=bool, default=True)
+# DOMAIN = config("DOMAIN", default="parangasec.online")
+# USE_HTTPS = config("USE_HTTPS", cast=bool, default=True)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'            
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'parangasecondary@gmail.com'
+EMAIL_HOST_PASSWORD = 'wyjertciefqjtktb'  
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
