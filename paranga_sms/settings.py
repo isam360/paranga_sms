@@ -1,5 +1,3 @@
-# settings.py
-
 from pathlib import Path
 import os
 import cloudinary
@@ -14,46 +12,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------
 # Security
-# --------------------------------------------------
-SECRET_KEY = config(
-    "SECRET_KEY",
-    default="django-insecure-local-dev-key-change-me"
-)
-
-
-DEBUG = config("DEBUG", cast=bool, default=False)
+# --------------------------------------------------------------
+SECRET_KEY = config("SECRET_KEY", default="django-insecure-default-secret-key")
+DEBUG = config("DEBUG", cast=bool, default=True)
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
     cast=Csv(),
-    default="localhost,127.0.0.1"
+    default="localhost,127.0.0.1,parangasec.up.railway.app"
 )
 
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     cast=Csv(),
-    default=""
+    default="https://parangasec.up.railway.app,http://localhost:8000,http://127.0.0.1:8000"
 )
 
-SITE_URL = config("SITE_URL", default="http://localhost:8000")
+SITE_URL = config("SITE_URL", default="https://parangasec.online")
 
 # --------------------------------------------------------------
 # Security Settings for Railway Deployment (HTTPS, CSRF, Cookies)
 # --------------------------------------------------------------
-
-# Ensure CSRF cookie is only sent over HTTPS
 CSRF_COOKIE_SECURE = True
-
-# Ensure session cookie is only sent over HTTPS
 SESSION_COOKIE_SECURE = True
-
-# Set SameSite policy for CSRF cookie to allow login redirects
-CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict' for tighter security, but may break some logins
-
-# Tell Django it is behind a proxy that handles HTTPS
+CSRF_COOKIE_SAMESITE = 'Lax'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-
+# CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS", "PUT", "DELETE"]
 CORS_ALLOW_HEADERS = [
@@ -88,22 +73,17 @@ INSTALLED_APPS = [
     'teachers',
     'announcements',
     'core',
-     "results",
-    "OAuthForm",
-    "landingpage",
+    'results',
+    'OAuthForm',
+    'landingpage',
 ]
 
-# Base URL of your site (used in emails, links, etc.)
-SITE_URL = "https://parangasec.online"  # or your actual domain in production
-
-
-
-# ----------------------------
-# Cloudinary config - hardcoded credentials
-# ----------------------------
-CLOUDINARY_CLOUD_NAME = 'dsntkh10i'
-CLOUDINARY_API_KEY = '761499212215921'
-CLOUDINARY_API_SECRET = '9Q6Pn0r0KEw3t6L2rOReFsl0f4A'
+# --------------------------------------------------------------
+# Cloudinary config (with defaults)
+# --------------------------------------------------------------
+CLOUDINARY_CLOUD_NAME = config("CLOUDINARY_CLOUD_NAME", default="dsntkh10i")
+CLOUDINARY_API_KEY = config("CLOUDINARY_API_KEY", default="761499212215921")
+CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET", default="9Q6Pn0r0KEw3t6L2rOReFsl0f4A")
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
@@ -118,7 +98,6 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 # --------------------------------------------------------------
 # Middleware
@@ -147,7 +126,7 @@ WSGI_APPLICATION = 'paranga_sms.wsgi.application'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'layout', BASE_DIR / 'templates'],  # ✅ Fix here
+        'DIRS': [BASE_DIR / 'layout', BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -160,61 +139,53 @@ TEMPLATES = [
     },
 ]
 
-
 # --------------------------------------------------------------
 # Database
 # --------------------------------------------------------------
-# import socket
-# import dj_database_url
+# --------------------------------------------------------------
+# Database
+# --------------------------------------------------------------
+import socket
 
+# Function to check if we are running locally
+def is_localhost():
+    try:
+        # Attempt to connect to localhost PostgreSQL
+        s = socket.create_connection(("127.0.0.1", 5432), timeout=1)
+        s.close()
+        return True
+    except OSError:
+        return False
 
-# def is_online(host="metro.proxy.rlwy.net", port=5432, timeout=2):
-#     try:
-#         socket.setdefaulttimeout(timeout)
-#         socket.socket().connect((host, port))
-#         return True
-#     except socket.error:
-#         return False
+# Get the DATABASE_URL from environment, otherwise fallback to local dev
+DATABASE_URL = config(
+    "DATABASE_URL",
+    default="postgresql://postgres:BBUPHWcPiGkCioVCqLBVBZJYtaJurmhJ@maglev.proxy.rlwy.net:18652/railway"
+)
 
-# if is_online():
-#     # Use Railway (online PostgreSQL)
-#     DATABASE_URL = os.getenv(
-#         'DATABASE_URL',
-#         'postgresql://postgres:QfEkirSQjJhxDlvIlZsnxlcZvEBUAyos@metro.proxy.rlwy.net:16448/railway'
-#     )
-#     DATABASES = {
-#         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-#     }
-# else:
-#     # Use SQLite (offline)
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-
-
-
+# Decide SSL based on environment
 DATABASES = {
     "default": dj_database_url.parse(
-        config("DATABASE_URL", default="postgresql://postgres:BBUPHWcPiGkCioVCqLBVBZJYtaJurmhJ@maglev.proxy.rlwy.net:18652/railway"),
+        DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=not is_localhost()  # ✅ SSL required only in production
     )
 }
+
+# Optional: Print database info for debugging (remove in production)
+if DEBUG:
+    print("Using database:", DATABASES["default"]["NAME"])
+    print("SSL required:", DATABASES["default"].get("OPTIONS", {}).get("sslmode", "not set"))
 
 
 # --------------------------------------------------------------
 # Authentication
 # --------------------------------------------------------------
 AUTH_USER_MODEL = 'accounts.User'
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -262,7 +233,6 @@ REST_FRAMEWORK = {
         'anon': '10/minute',
         'user': '1000/day',
     },
-    # 'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
 }
 
 # --------------------------------------------------------------
@@ -276,11 +246,11 @@ SIMPLE_JWT = {
 }
 
 # --------------------------------------------------------------
-# Africa's Talking SMS API
+# Africa's Talking SMS API (with defaults)
 # --------------------------------------------------------------
-AFRICASTALKING_USERNAME = config("AFRICASTALKING_USERNAME")
-AFRICASTALKING_API_KEY = config("AFRICASTALKING_API_KEY")
-AFRICASTALKING_SENDER_ID = config("AFRICASTALKING_SENDER_ID")
+AFRICASTALKING_USERNAME = config("AFRICASTALKING_USERNAME", default="dispute_app")
+AFRICASTALKING_API_KEY = config("AFRICASTALKING_API_KEY", default="atsk_default_api_key")
+AFRICASTALKING_SENDER_ID = config("AFRICASTALKING_SENDER_ID", default="PARANGASEC")
 
 # --------------------------------------------------------------
 # Jazzmin Admin Configuration
@@ -291,26 +261,16 @@ JAZZMIN_SETTINGS = {
     "site_brand": "(AIMS)",
     "welcome_sign": "Academic Information Management System (AIMS)",
     "copyright": "© 2025 Paranga Secondary School",
-    
-    # Logos
     "site_logo": "images/school_logo.jpg",
     "login_logo": "images/school_logo.jpg",
     "logout_logo": "images/school_logo.jpg",
-    "site_icon": "images/school_logo.jpg",  # Optional: Add a favicon
-
-    # Sidebar + Layout
+    "site_icon": "images/school_logo.jpg",
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": ["auth", "sessions"],
-
-    # FontAwesome icons
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-
-    # Search bar model
     "search_model": "students.Student",
-
-    # Top menu shortcuts
     "topmenu_links": [
         {"name": "Dashboard", "url": "/admin", "permissions": ["auth.view_user"]},
         {"model": "students.Student"},
@@ -319,8 +279,6 @@ JAZZMIN_SETTINGS = {
         {"model": "announcements.DisciplinaryMessage"},
         {"name": "School Website", "url": "", "new_window": True},
     ],
-
-    # Model Icons
     "icons": {
         "auth": "fas fa-users-cog",
         "students.Student": "fas fa-user-graduate",
@@ -328,19 +286,14 @@ JAZZMIN_SETTINGS = {
         "announcements.Announcement": "fas fa-bullhorn",
         "announcements.DisciplinaryMessage": "fas fa-exclamation-triangle",
     },
-
-    # Custom Login/Logout/Login Error Styling
-    "custom_css": "css/custom_login.css",  # 💡 Make sure this file exists in your static folder
-
-    # Customizing actions
-    "changeform_format": "horizontal_tabs",  # or "collapsible", "single"
+    "custom_css": "css/custom_login.css",
+    "changeform_format": "horizontal_tabs",
     "related_modal_active": True,
 }
 
-
 JAZZMIN_UI_TWEAKS = {
-    "theme": "flatly",               # ✅ Light, clean
-    "dark_mode_theme": "darkly",  # ✅ Soft dark
+    "theme": "flatly",
+    "dark_mode_theme": "darkly",
     "navbar_small_text": False,
     "footer_small_text": False,
     "body_small_text": False,
@@ -370,7 +323,7 @@ LOGGING = {
         'level': 'INFO',
         'propagate': True,
     },
-       'loggers': {
+    'loggers': {
         'paranga_sms.sendgrid_backend': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -379,35 +332,25 @@ LOGGING = {
     }
 }
 
-# Redirect users to admin login by default
+# --------------------------------------------------------------
+# Authentication Redirects
+# --------------------------------------------------------------
 LOGIN_URL = '/admin/login/'
-LOGIN_REDIRECT_URL = '/admin/'  # after login
+LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/admin/login/'
-
-# settings.py
-PASSWORD_RESET_TIMEOUT_DAYS = 1  # Optional: link expires in 1 day
-
+PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 # --------------------------------------------------------------
-# Email settings (for sending verification emails or other emails)
+# Email settings (SendGrid)
 # --------------------------------------------------------------
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND",
+    default="paranga_sms.sendgrid_backend.SendGridAPIEmailBackend"
+)
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL",
+    default="Paranga Secondary <no-reply@parangasec.online>"
+)
 
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'            
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'parangasecondary@gmail.com'
-# EMAIL_HOST_PASSWORD = 'wyjertciefqjtktb'  
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-EMAIL_BACKEND = "paranga_sms.sendgrid_backend.SendGridAPIEmailBackend"
-DEFAULT_FROM_EMAIL = "Paranga Secondary <no-reply@parangasec.online>"
-
-# Use your production domain for password reset links
-# Django 5.2+ uses this for password reset emails if sites framework is not used
-DOMAIN = "parangasec.online"
-USE_HTTPS = True
-
+DOMAIN = config("DOMAIN", default="parangasec.online")
+USE_HTTPS = config("USE_HTTPS", cast=bool, default=True)
