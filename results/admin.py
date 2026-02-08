@@ -591,7 +591,29 @@ class ExamResultAdmin(admin.ModelAdmin):
                     sheet.write(r, gpa_table_start_col + 1, gpa_val, color_fmt)
 
             # ---------------- Overall School GPA and Comment --------------------
-            school_gpa = round(np.nanmean([row[1] for row in subject_gpa_rows if row[1] is not None]), 2)
+            # ---------------- Correct Overall NECTA GPA --------------------
+            all_student_points = []
+
+            for student in students:
+                # Get all results for this student in this exam session
+                student_results = all_results.filter(student=student)
+                student_points = []
+
+                for res in student_results:
+                    if res.score is not None:
+                        student_points.append(score_to_necta_point(res.score))
+
+                if student_points:
+                    # Average points for this student
+                    avg_student_points = sum(student_points) / len(student_points)
+                    all_student_points.append(avg_student_points)
+
+            if all_student_points:
+                school_gpa = round(np.nanmean([row[1] for row in subject_gpa_rows if row[1] is not None]), 2)
+            else:
+                school_gpa = 0
+
+            # Add comment based on benchmark
             benchmark_gpa = 3.5
             if school_gpa > benchmark_gpa:
                 gpa_comment = f"School GPA ({school_gpa}) is ABOVE benchmark ({benchmark_gpa}) – Excellent"
@@ -600,9 +622,6 @@ class ExamResultAdmin(admin.ModelAdmin):
             else:
                 gpa_comment = f"School GPA ({school_gpa}) is equal to benchmark ({benchmark_gpa})"
 
-            sheet.merge_range(subject_summary_start + len(subject_gpa_rows) + 2, gpa_table_start_col,
-                            subject_summary_start + len(subject_gpa_rows) + 2, gpa_table_start_col + 2,
-                            gpa_comment, box_title_fmt)
 
             # ---------------- Results Table --------------------
             start_table = subject_summary_start + max(len(subject_summary), len(subject_gpa_rows)) + 4
