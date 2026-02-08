@@ -591,15 +591,15 @@ class ExamResultAdmin(admin.ModelAdmin):
                     sheet.write(r, gpa_table_start_col + 1, gpa_val, color_fmt)
 
             # ---------------- Overall School GPA and Comment --------------------
-            # ---------------- Correct Overall NECTA GPA --------------------
+            # ---------------- Overall School GPA and Comment (Corrected) --------------------
             all_student_points = []
 
             for student in students:
                 # Get all results for this student in this exam session
-                student_results = all_results.filter(student=student)
+                student_results_qs = all_results.filter(student=student)
                 student_points = []
 
-                for res in student_results:
+                for res in student_results_qs:
                     if res.score is not None:
                         student_points.append(score_to_necta_point(res.score))
 
@@ -608,8 +608,9 @@ class ExamResultAdmin(admin.ModelAdmin):
                     avg_student_points = sum(student_points) / len(student_points)
                     all_student_points.append(avg_student_points)
 
+            # Compute overall school GPA as mean of individual student GPAs
             if all_student_points:
-                school_gpa = round(np.nanmean([row[1] for row in subject_gpa_rows if row[1] is not None]), 2)
+                school_gpa = round(np.nanmean(all_student_points), 2)
             else:
                 school_gpa = 0
 
@@ -621,6 +622,17 @@ class ExamResultAdmin(admin.ModelAdmin):
                 gpa_comment = f"School GPA ({school_gpa}) is BELOW benchmark ({benchmark_gpa}) – Needs Improvement"
             else:
                 gpa_comment = f"School GPA ({school_gpa}) is equal to benchmark ({benchmark_gpa})"
+
+            # Write comment in Excel
+            sheet.merge_range(
+                subject_summary_start + len(subject_gpa_rows) + 2,
+                gpa_table_start_col,
+                subject_summary_start + len(subject_gpa_rows) + 2,
+                gpa_table_start_col + 2,
+                gpa_comment,
+                box_title_fmt
+            )
+
 
 
             # ---------------- Results Table --------------------
