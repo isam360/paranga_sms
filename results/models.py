@@ -19,6 +19,7 @@ class ExamSession(models.Model):
         ("Mid Term", "Mid Term"),
         ("Terminal", "Terminal"),
         ("Annual", "Annual"),
+        ("Monthly Test", "Monthly Test"),
     ]
 
     form = models.IntegerField(choices=FORM_CHOICES)

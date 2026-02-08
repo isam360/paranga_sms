@@ -275,17 +275,7 @@ def get_grade_and_remark(score):
         return "F", "Fail"
 
 # ---------------- NECTA GPA POINTS ----------------
-def get_gpa_point(score):
-    if score >= 75:
-        return 5
-    elif score >= 65:
-        return 4
-    elif score >= 45:
-        return 3
-    elif score >= 30:
-        return 2
-    else:
-        return 0
+
 
 
 # -------------------- ExamResult Admin --------------------
@@ -564,24 +554,28 @@ class ExamResultAdmin(admin.ModelAdmin):
                     sheet.write(r, c, val, summary_cell_fmt)
 
             # ---------------- GPA Summary (Right) --------------------
+            # ---------------- GPA Summary (Right) --------------------
             gpa_table_start_col = len(summary_cols) + 2
             subject_gpa_rows = []
+
             for subj in all_subjects:
                 subj_scores = df[subj].dropna()
                 if subj_scores.empty:
                     avg_points = None
                 else:
-                    points = [get_gpa_points(s) for s in subj_scores]
-                    avg_points = round(sum(points)/len(points), 2)
+                    points = [score_to_necta_point(s) for s in subj_scores]
+                    avg_points = round(sum(points) / len(points), 2)
+
                 subject_gpa_rows.append([subj, avg_points, len(subj_scores)])
 
-            gpa_summary_cols = ["Subject", "Average GPA Points", "Total Students"]
+            gpa_summary_cols = ["Subject", "Average NECTA Points", "Total Students"]
             for col_num, col_name in enumerate(gpa_summary_cols):
                 sheet.write(subject_summary_start, gpa_table_start_col + col_num, col_name, summary_header_fmt)
 
             for r, row_data in enumerate(subject_gpa_rows, start=subject_summary_start + 1):
                 for c, val in enumerate(row_data):
                     sheet.write(r, gpa_table_start_col + c, val, summary_cell_fmt)
+
 
             # ---------------- Conditional Coloring for GPA --------------------
             for r, row_data in enumerate(subject_gpa_rows, start=subject_summary_start + 1):
