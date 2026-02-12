@@ -139,44 +139,26 @@ TEMPLATES = [
     },
 ]
 
-# --------------------------------------------------------------
-# Database
-# --------------------------------------------------------------
-# --------------------------------------------------------------
-# Database
-# --------------------------------------------------------------
-import socket
+# settings.py
+import dj_database_url
 
-# Function to check if we are running locally
-def is_localhost():
-    try:
-        # Attempt to connect to localhost PostgreSQL
-        s = socket.create_connection(("127.0.0.1", 5432), timeout=1)
-        s.close()
-        return True
-    except OSError:
-        return False
+# Use Railway public URL for local development
+DATABASE_URL = "postgresql://postgres:rsHtnOBTquXikRADfzPMdDXTOXXKgfnM@crossover.proxy.rlwy.net:17283/railway"
 
-# Get the DATABASE_URL from environment, otherwise fallback to local dev
-DATABASE_URL = config(
-    "DATABASE_URL",
-    default="postgresql://postgres:BBUPHWcPiGkCioVCqLBVBZJYtaJurmhJ@maglev.proxy.rlwy.net:18652/railway"
-)
-
-# Decide SSL based on environment
 DATABASES = {
     "default": dj_database_url.parse(
         DATABASE_URL,
         conn_max_age=600,
-        ssl_require=not is_localhost()  # ✅ SSL required only in production
+        ssl_require=True,  # Public URL requires SSL
     )
 }
 
-# Optional: Print database info for debugging (remove in production)
+# Optional debug print
+import os
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 if DEBUG:
     print("Using database:", DATABASES["default"]["NAME"])
-    print("SSL required:", DATABASES["default"].get("OPTIONS", {}).get("sslmode", "not set"))
-
+    print("SSL required:", DATABASES["default"]["OPTIONS"].get("sslmode"))
 
 # --------------------------------------------------------------
 # Authentication
@@ -340,7 +322,27 @@ LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/admin/login/'
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
-# --------------------------------------------------
-# Default PK
-# --------------------------------------------------
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# --------------------------------------------------------------
+# Email settings (SendGrid)
+# --------------------------------------------------------------
+# EMAIL_BACKEND = config(
+#     "EMAIL_BACKEND",
+#     default="paranga_sms.sendgrid_backend.SendGridAPIEmailBackend"
+# )
+# DEFAULT_FROM_EMAIL = config(
+#     "DEFAULT_FROM_EMAIL",
+#     default="Paranga Secondary <no-reply@parangasec.online>"
+# )
+
+# DOMAIN = config("DOMAIN", default="parangasec.online")
+# USE_HTTPS = config("USE_HTTPS", cast=bool, default=True)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'            
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'parangasecondary@gmail.com'
+EMAIL_HOST_PASSWORD = 'wyjertciefqjtktb'  
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
